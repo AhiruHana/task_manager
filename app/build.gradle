@@ -23,6 +23,7 @@ dependencies {
     implementation libs.guava
     implementation files("libs/mysql:mysql-connector-j-8.3.0.jar")
     implementation 'org.hibernate:hibernate-core:5.5.7.Final'
+    implementation 'javax.persistence:javax.persistence-api:2.2'
 }
 
 testing {
