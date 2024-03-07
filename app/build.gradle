@@ -21,6 +21,8 @@ repositories {
 dependencies {
     // This dependency is used by the application.
     implementation libs.guava
+    implementation files("libs/mysql:mysql-connector-j-8.3.0.jar")
+    implementation 'org.hibernate:hibernate-core:5.5.7.Final'
 }
 
 testing {
