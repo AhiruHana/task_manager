@@ -25,10 +25,12 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import taskmanager.entities.Board;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -57,7 +59,6 @@ public class WorkspaceController implements Initializable {
     @FXML
     private GridPane recentlyOpened;
 
-   
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
@@ -65,21 +66,29 @@ public class WorkspaceController implements Initializable {
 
         });
 
-        var data = createData();
+        // var data = createData();
 
-        displayProjectList(data);
-        diplayRecentOpened(data);
-        
-        
+        // displayProjectList(data);
+        // diplayRecentOpened(data);
+
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
-        Query query = session.createSQLQuery(
-                "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'task_manager'");
-        List<String> tableNames = query.list();
+        Query query = session.createSQLQuery("SELECT * FROM boards").addEntity(Board.class);
+        // List<Object[]> result = query.list();   
 
-        for (String tableName : tableNames) {
-            System.out.println("Table Name: " + tableName);
-        }
+        // List<Board> boards = new ArrayList<>();
+        // for (Object[] row : result) {
+        //     Board board = new Board();
+        //     board.setId((int) row[0]);
+        //     board.setName((String) row[1]);
+        //     board.setLastOpened((LocalDateTime)row[2]);
+        //     board.setColor((String) row[3]);
+        //     boards.add(board);
+        // }
+        List<Board> boards = query.list();
+displayProjectList(boards);
+
+        // displayProjectList(boards);
 
         session.close();
     }
@@ -141,27 +150,34 @@ public class WorkspaceController implements Initializable {
         return data;
     }
 
-    private void displayProjectList(List<Map<String, Object>> data) {
+    private void displayProjectList(List<Board> data) {
         int colIndex = 1;
         int rowIndex = 0;
-        for (Map<String, Object> entry : data) {
-            int id = (int) entry.get("id");
-            String name = (String) entry.get("name");
-            String color1 = (String) entry.get("color1");
-            String color2 = (String) entry.get("color2");
-            String gradientText = String.format(
-                    "-fx-background-color: linear-gradient(to right, %s, %s); -fx-background-radius: 5.0;",
-                    color1.toString(), color2.toString());
+        for (Board d : data) {
+            int id = d.getId();
+            String name = d.getName();
+            String color = d.getColor();
 
-            VBox vBox = new VBox();
-            boardVbox(vBox, gradientText, name, entry);
-            GridPane.setConstraints(vBox, colIndex, rowIndex);
-            boardList.getChildren().add(vBox);
+            String[] colorArray = color.split("\\,");
 
-            colIndex++;
-            if (colIndex == 4) {
-                colIndex = 0;
-                rowIndex++;
+            if (colorArray.length >= 2) {
+                String color1 = colorArray[0].trim();
+                String color2 = colorArray[1].trim();
+
+                String gradientText = String.format(
+                        "-fx-background-color: linear-gradient(to right, %s, %s); -fx-background-radius: 5.0;",
+                        color1, color2);
+
+                VBox vBox = new VBox();
+                boardVbox(vBox, gradientText, name, data);
+                GridPane.setConstraints(vBox, colIndex, rowIndex);
+                boardList.getChildren().add(vBox);
+
+                colIndex++;
+                if (colIndex == 4) {
+                    colIndex = 0;
+                    rowIndex++;
+                }
             }
         }
 
@@ -211,7 +227,7 @@ public class WorkspaceController implements Initializable {
                     color1.toString(), color2.toString());
 
             VBox vBox = new VBox();
-            boardVbox(vBox, gradientText, name, entry);
+            // boardVbox(vBox, gradientText, name, entry);
 
             GridPane.setConstraints(vBox, colIndex, 0);
             recentlyOpened.getChildren().add(vBox);
@@ -221,7 +237,7 @@ public class WorkspaceController implements Initializable {
 
     }
 
-    private void boardVbox(VBox vBox, String gradientText, String name, final Map<String, Object> entry) {
+    private void boardVbox(VBox vBox, String gradientText, String name, List<Board> boards) {
 
         vBox.setPrefHeight(70.0);
         vBox.setPrefWidth(190.0);
@@ -250,7 +266,15 @@ public class WorkspaceController implements Initializable {
 
             newVBox.getChildren().add(backButton);
             backButton.setOnAction(backEvent -> {
-                entry.put("lastOpened", LocalDateTime.now());
+                SessionFactory factory = HibernateUtil.getFactory();
+                Session session = factory.openSession();
+                Transaction transaction = session.beginTransaction();
+
+                Board board = session.get(Board.class, vBox.getId());
+                board.setLastOpened(LocalDateTime.now());
+
+                session.update(board);
+                transaction.commit();
 
                 previousStage.setScene(previousScene);
                 previousStage.show();
@@ -268,4 +292,3 @@ public class WorkspaceController implements Initializable {
         });
     }
 }
-

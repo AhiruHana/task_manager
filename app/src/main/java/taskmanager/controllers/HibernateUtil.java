@@ -2,6 +2,13 @@ package taskmanager.controllers;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
+import javafx.concurrent.Task;
+import taskmanager.entities.Board;
+import taskmanager.entities.Col;
+import taskmanager.entities.TaskAssignment;
+import taskmanager.entities.User;
+
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
@@ -11,6 +18,12 @@ public class HibernateUtil {
     static {
         Configuration conf = new Configuration();
         conf.configure("hibernate.cfg.xml");
+        conf.addAnnotatedClass(Board.class);
+        conf.addAnnotatedClass(Col.class);
+        conf.addAnnotatedClass(Task.class);
+        conf.addAnnotatedClass(TaskAssignment.class);
+        conf.addAnnotatedClass(User.class);
+
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
         .applySettings(conf.getProperties())
         .build();
