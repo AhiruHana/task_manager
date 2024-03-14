@@ -2,6 +2,7 @@ package taskmanager.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import taskmanager.entities.Workspace;
 
 @Entity
 @Table(name = "boards")

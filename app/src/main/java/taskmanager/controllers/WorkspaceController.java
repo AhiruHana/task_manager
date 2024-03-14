@@ -158,7 +158,7 @@ displayProjectList(boards);
             String name = d.getName();
             String color = d.getColor();
 
-            String[] colorArray = color.split("\\,");
+            String[] colorArray = color.split(",");
 
             if (colorArray.length >= 2) {
                 String color1 = colorArray[0].trim();
