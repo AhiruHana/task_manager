@@ -19,6 +19,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
+import taskmanager.entities.Board;
 import taskmanager.entities.User;
 
 
@@ -49,6 +52,9 @@ public class RegisterController {
     private TextField lastNameField;
 
    
+
+ 
+
 
 @FXML
     void ClickLogin(ActionEvent event) {
@@ -90,9 +96,41 @@ public class RegisterController {
 
 
     private void registerUser(String firstName, String lastName, String email, String password) {
-        // Xử lý đăng ký người dùng bằng cách sử dụng Hibernate
-
-        // Gọi phương thức tương ứng trong class controller của bạn để chèn dữ liệu vào cơ sở dữ liệu
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
+        Transaction transaction = null;
+        
+        try {
+            // Bắt đầu giao dịch
+            transaction = session.beginTransaction();
+            
+            // Tạo câu lệnh INSERT INTO với tham số hóa
+            String sql = "INSERT INTO users (first_Name, last_Name, email, password_hash) VALUES (:firstName, :lastName, :email, :password)";
+            
+            // Tạo truy vấn từ câu lệnh SQL
+            Query query = session.createSQLQuery(sql);
+            
+            // Đặt giá trị cho các tham số
+            query.setParameter("firstName", firstName);
+            query.setParameter("lastName", lastName);
+            query.setParameter("email", email);
+            query.setParameter("password", password);
+            
+            // Thực thi truy vấn
+            int result = query.executeUpdate();
+            
+            // Commit giao dịch
+            transaction.commit();
+        } catch (Exception e) {
+            // Xảy ra lỗi, rollback giao dịch
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            // Đóng session
+            session.close();
+        }
     }
 
     private void showErrorAlert(String title, String message) {

@@ -19,7 +19,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
 
 
-        scene = new Scene(loadFXML("Register"));
+        scene = new Scene(loadFXML("Login"));
 
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
