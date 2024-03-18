@@ -1,29 +1,54 @@
 package taskmanager.entities;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import taskmanager.entities.Workspace;
 
 @Entity
 @Table(name = "boards")
 public class Board {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private int id;
 
   @Column(name = "name", nullable = false, length = 100)
   private String name;
+
+  @Column(name = "color", nullable = false, length = 100)
+  private String color;
+
+  @Column(name = "lastOpened", nullable = false, length = 100)
+  private LocalDateTime lastOpened;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "workspace_id", nullable = false)
   private Workspace workspace;
 
-  public Long getId() {
+  public int getId() {
     return id;
+  }
+
+  public String getColor() {
+    return this.color;
+  }
+
+  public void setColor(String color) {
+    this.color = color;
+  }
+
+  public LocalDateTime getLastOpened() {
+    return this.lastOpened;
+  }
+
+  public void setLastOpened(LocalDateTime lastOpened) {
+    this.lastOpened = lastOpened;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setId(Long id) {
+  public void setId(int id) {
     this.id = id;
   }
 

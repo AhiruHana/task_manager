@@ -11,7 +11,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+
 <BorderPane id="borderPane" fx:id="borderPane" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="taskmanager.controllers.LoginController">
+
    <left>
       <AnchorPane prefHeight="00.0" prefWidth="350.0" style="-fx-background-color: #00FFFF;" BorderPane.alignment="CENTER">
          <children>
@@ -31,8 +33,10 @@
             <PasswordField fx:id="passwordField" layoutX="95.0" layoutY="237.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
             <!-- <FontAwesomeIconView fill="#0598ff" glyphName="USER" layoutX="68.0" layoutY="217.0" size="20" text="" />
             <FontAwesomeIconView fill="#0598ff" glyphName="KEY" layoutX="65.0" layoutY="258.0" size="20" /> -->
+
             <Button fx:id="Login" layoutX="127.0" layoutY="304.0" mnemonicParsing="false" onAction="#loginButtonClicked" prefHeight="42.0" prefWidth="85.0" style="-fx-background-color: #0598ff;" text="Login" />
             <Hyperlink fx:id="SignUp" layoutX="140.0" layoutY="430.0" onAction="#ClickSignUp" text="Sign Up" />
+
             <Hyperlink layoutX="121.0" layoutY="454.0" text="Forgot password" />
             <!-- <FontAwesomeIconView fill="#0598ff" glyphName="USERS" layoutX="142.0" layoutY="88.0" size="50" /> -->
             <Text fill="#0598ff" layoutX="122.0" layoutY="133.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
