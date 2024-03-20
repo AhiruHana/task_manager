@@ -14,7 +14,7 @@
 
         <!-- Mapping files -->
         <!-- Add your entity mappings here -->
-
+        <!-- <mapping class="taskmanager.entities.Board"/> -->
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
     </session-factory>
