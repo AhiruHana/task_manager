@@ -26,7 +26,7 @@ import taskmanager.entities.User;
 
 
 public class RegisterController {
-    
+
  @FXML
     private Hyperlink Login;
 
@@ -51,9 +51,9 @@ public class RegisterController {
     @FXML
     private TextField lastNameField;
 
-   
 
- 
+
+
 
 
 @FXML
@@ -77,7 +77,7 @@ public class RegisterController {
 
 
     @FXML
-    void clickSignIn(ActionEvent event) {
+    void clickSignUp(ActionEvent event) {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String email = emailField.getText();
@@ -99,26 +99,26 @@ public class RegisterController {
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
         Transaction transaction = null;
-        
+
         try {
             // Bắt đầu giao dịch
             transaction = session.beginTransaction();
-            
+
             // Tạo câu lệnh INSERT INTO với tham số hóa
             String sql = "INSERT INTO users (first_Name, last_Name, email, password_hash) VALUES (:firstName, :lastName, :email, :password)";
-            
+
             // Tạo truy vấn từ câu lệnh SQL
             Query query = session.createSQLQuery(sql);
-            
+
             // Đặt giá trị cho các tham số
             query.setParameter("firstName", firstName);
             query.setParameter("lastName", lastName);
             query.setParameter("email", email);
             query.setParameter("password", password);
-            
+
             // Thực thi truy vấn
             int result = query.executeUpdate();
-            
+
             // Commit giao dịch
             transaction.commit();
         } catch (Exception e) {
