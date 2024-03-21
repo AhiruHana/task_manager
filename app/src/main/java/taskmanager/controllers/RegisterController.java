@@ -85,7 +85,7 @@ public class RegisterController {
         String confirmPassword = confirmPasswordField.getText();
 
         if (!password.equals(confirmPassword)) {
-            showErrorAlert("Password mismatch", "The passwords do not match.");
+            showErrorAlert("Password mismatched", "The passwords do not match.");
             return;
         }
         RegisterController registerController = new RegisterController();
