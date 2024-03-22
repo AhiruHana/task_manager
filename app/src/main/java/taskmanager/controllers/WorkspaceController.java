@@ -1,21 +1,18 @@
 package taskmanager.controllers;
 
+import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,17 +22,15 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import taskmanager.App;
 import taskmanager.entities.Board;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-public class WorkspaceController implements Initializable {
+public class WorkspaceController {
     @FXML
     private BorderPane borderPane;
 
@@ -43,15 +38,12 @@ public class WorkspaceController implements Initializable {
     private VBox menuSideBar;
 
     @FXML
-    private Button menu1;
+    private Label info_username;
     @FXML
-    private Button menu2;
+    private Label info_fullname;
 
     @FXML
-    private Button menu3;
-
-    @FXML
-    private Button menu4;
+    private Label info_email;
 
     @FXML
     private GridPane boardList;
@@ -59,39 +51,43 @@ public class WorkspaceController implements Initializable {
     @FXML
     private GridPane recentlyOpened;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-            responseWidth(newWidth.doubleValue());
+    @FXML
+    private Button logout;
 
-        });
+    @FXML
+    private void logout(ActionEvent event) {
+        try {
+            double width = borderPane.getScene().getWidth();
+            double height = borderPane.getScene().getHeight();
 
-        // var data = createData();
+            Parent root = FXMLLoader.load(App.class.getResource("/Login.fxml"));
+            Scene scene = new Scene(root, width, height);
 
-        // displayProjectList(data);
-        // diplayRecentOpened(data);
+            Stage stage = (Stage) borderPane.getScene().getWindow();
+            stage.setScene(scene);
 
-        SessionFactory factory = HibernateUtil.getFactory();
-        Session session = factory.openSession();
-        Query query = session.createSQLQuery("SELECT * FROM boards").addEntity(Board.class);
-        // List<Object[]> result = query.list();   
-
-        // List<Board> boards = new ArrayList<>();
-        // for (Object[] row : result) {
-        //     Board board = new Board();
-        //     board.setId((int) row[0]);
-        //     board.setName((String) row[1]);
-        //     board.setLastOpened((LocalDateTime)row[2]);
-        //     board.setColor((String) row[3]);
-        //     boards.add(board);
-        // }
-        List<Board> boards = query.list();
-displayProjectList(boards);
-
-        // displayProjectList(boards);
-
-        session.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+    
+    private String username;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    // @Override
+    // public void initialize(URL location, ResourceBundle resources) {
+    // borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+    // responseWidth(newWidth.doubleValue());
+
+    // });
+
+    // displayProjectList();
+    // diplayRecentOpened();
+
+    // }
 
     private String generateRandomColor() {
         Random random = new Random();
@@ -103,61 +99,36 @@ displayProjectList(boards);
 
     public void responseWidth(double totalWidth) {
         double menuSideBarWidth = totalWidth * 0.2;
-        menu1.setPrefWidth(menuSideBarWidth);
-        menu2.setPrefWidth(menuSideBarWidth);
-        menu3.setPrefWidth(menuSideBarWidth);
-        menu4.setPrefWidth(menuSideBarWidth);
+        info_username.setPrefWidth(menuSideBarWidth);
+        info_fullname.setPrefWidth(menuSideBarWidth);
+        info_email.setPrefWidth(menuSideBarWidth);
+        logout.setPrefWidth(menuSideBarWidth);
         menuSideBar.setPrefWidth(menuSideBarWidth);
     }
 
-    private static Map<String, Object> createEntry(int id, String name, String lastOpened, String color1,
-            String color2) {
-        Map<String, Object> entry = new HashMap<>();
-        entry.put("id", id);
-        entry.put("name", name);
-        entry.put("lastOpened", lastOpened);
-        entry.put("color1", color1);
-        entry.put("color2", color2);
-        return entry;
-    }
+    void displayProjectList() {
 
-    private List<Map<String, Object>> createData() {
-        List<Map<String, Object>> data = new ArrayList<>();
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
+        Query query = session.createQuery(
+                "SELECT b FROM Board b " +
+                        "JOIN b.workspace w " +
+                        "JOIN w.user u " +
+                        "WHERE u.username = :username or email= : username");
+        query.setParameter("username", username);
+        List<Board> boards = query.list();
 
-        Map<String, Object> entry1 = createEntry(1, "Janetta", "24-08-2023 00:00:00", generateRandomColor(),
-                generateRandomColor());
-        data.add(entry1);
-
-        Map<String, Object> entry2 = createEntry(2, "Jobyna", "19-08-2023 00:00:00", generateRandomColor(),
-                generateRandomColor());
-        data.add(entry2);
-
-        Map<String, Object> entry3 = createEntry(3, "Earle", "23-12-2023 00:00:00", generateRandomColor(),
-                generateRandomColor());
-        data.add(entry3);
-
-        Map<String, Object> entry4 = createEntry(4, "Granger", "13-12-2023 00:00:00", generateRandomColor(),
-                generateRandomColor());
-        data.add(entry4);
-
-        Map<String, Object> entry5 = createEntry(5, "Westbrook", "13-08-2024 00:00:00", generateRandomColor(),
-                generateRandomColor());
-        data.add(entry5);
-
-        Map<String, Object> entry6 = createEntry(6, "Emlynn", "13-09-2023 00:00:00", generateRandomColor(),
-                generateRandomColor());
-        data.add(entry6);
-        return data;
-    }
-
-    private void displayProjectList(List<Board> data) {
         int colIndex = 1;
         int rowIndex = 0;
-        for (Board d : data) {
+        System.out.println(username);
+        for (Board d : boards) {
             int id = d.getId();
             String name = d.getName();
             String color = d.getColor();
 
+            String queryString = query.getQueryString();
+            System.out.println(queryString);
+            System.out.println(username);
             String[] colorArray = color.split(",");
 
             if (colorArray.length >= 2) {
@@ -169,7 +140,7 @@ displayProjectList(boards);
                         color1, color2);
 
                 VBox vBox = new VBox();
-                boardVbox(vBox, gradientText, name, data);
+                boardVbox(vBox, gradientText, name, boards, id);
                 GridPane.setConstraints(vBox, colIndex, rowIndex);
                 boardList.getChildren().add(vBox);
 
@@ -191,6 +162,21 @@ displayProjectList(boards);
         label.setFont(new Font("System Italic", 12.0));
         VBox.setMargin(label, new Insets(10.0));
 
+        vBox.setOnMouseClicked(event -> {
+            try {
+                double width = borderPane.getScene().getWidth();
+                double height = borderPane.getScene().getHeight();
+
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/Board.fxml"));
+                Parent root = loader.load();
+
+                Scene scene = new Scene(root, width, height);
+                Stage stage = (Stage) borderPane.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
         vBox.getChildren().add(label);
         GridPane.setConstraints(vBox, 0, 0);
         boardList.getChildren().add(vBox);
@@ -203,41 +189,68 @@ displayProjectList(boards);
         }
     }
 
-    private void diplayRecentOpened(List<Map<String, Object>> data) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    void diplayRecentOpened() {
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
+        Query query = session.createQuery(
+                "SELECT b FROM Board b " +
+                        "JOIN b.workspace w " +
+                        "JOIN w.user u " +
+                        "WHERE u.username = :username or email= : username ORDER BY lastOpened DESC");
+        query.setParameter("username", username);
+        query.setMaxResults(3);
 
-        data.sort(Comparator.comparing((Map<String, Object> entry) -> {
-            String lastOpened = (String) entry.get("lastOpened");
-            LocalDate lastOpenedDate = LocalDate.parse(lastOpened, formatter);
-            return lastOpenedDate;
-        }).reversed());
-
-        List<Map<String, Object>> recentEntries = data.stream()
-                .limit(3)
-                .collect(Collectors.toList());
+        List<Board> boards = query.list();
 
         int colIndex = 0;
-        for (Map<String, Object> entry : recentEntries) {
-            int id = (int) entry.get("id");
-            String name = (String) entry.get("name");
-            String color1 = (String) entry.get("color1");
-            String color2 = (String) entry.get("color2");
-            String gradientText = String.format(
-                    "-fx-background-color: linear-gradient(to right, %s, %s); -fx-background-radius: 5.0;",
-                    color1.toString(), color2.toString());
+        for (Board b : boards) {
 
-            VBox vBox = new VBox();
-            // boardVbox(vBox, gradientText, name, entry);
+            int id = b.getId();
+            String name = b.getName();
+            String color = b.getColor();
 
-            GridPane.setConstraints(vBox, colIndex, 0);
-            recentlyOpened.getChildren().add(vBox);
+            String[] colorArray = color.split(",");
 
-            colIndex++;
+            if (colorArray.length >= 2) {
+                String color1 = colorArray[0].trim();
+                String color2 = colorArray[1].trim();
+
+                String gradientText = String.format(
+                        "-fx-background-color: linear-gradient(to right, %s, %s); -fx-background-radius: 5.0;",
+                        color1, color2);
+
+                VBox vBox = new VBox();
+                boardVbox(vBox, gradientText, name, boards, id);
+                GridPane.setConstraints(vBox, colIndex, 0);
+                recentlyOpened.getChildren().add(vBox);
+
+                colIndex++;
+            }
         }
+    }
+
+    public void getInfoUser() {
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
+        Query query = session.createQuery(
+                "select username, firstName, lastName, email from User u WHERE u.username = :username or email= : username ");
+        query.setParameter("username", username);
+
+        List<Object[]> results = query.list();
+
+        Object[] row = results.get(0);
+        String fetchedUsername = (String) row[0];
+        String fetchedFirstName = (String) row[1];
+        String fetchedLastName = (String) row[2];
+        String fetchedEmail = (String) row[3];
+
+        info_username.setText(fetchedUsername);
+        info_fullname.setText("Full Name: " + fetchedFirstName + " " + fetchedLastName);
+        info_email.setText("Email : "+fetchedEmail);
 
     }
 
-    private void boardVbox(VBox vBox, String gradientText, String name, List<Board> boards) {
+    public void boardVbox(VBox vBox, String gradientText, String name, List<Board> boards, int id) {
 
         vBox.setPrefHeight(70.0);
         vBox.setPrefWidth(190.0);
@@ -251,43 +264,30 @@ displayProjectList(boards);
         vBox.getChildren().add(label);
 
         vBox.setOnMouseClicked(event -> {
+            SessionFactory factory = HibernateUtil.getFactory();
+            Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
 
-            Stage previousStage = (Stage) vBox.getScene().getWindow();
-            Scene previousScene = previousStage.getScene();
+            Board board = session.get(Board.class, id);
+            board.setLastOpened(LocalDateTime.now());
 
-            VBox newVBox = new VBox();
-            newVBox.getChildren().add(new Label("New Screen"));
+            session.update(board);
+            transaction.commit();
+            session.close();
 
-            Button backButton = new Button("Back");
-            backButton.setOnAction(backEvent -> {
-                Stage currentStage = (Stage) backButton.getScene().getWindow();
-                currentStage.close();
-            });
+            try {
+                double width = borderPane.getScene().getWidth();
+                double height = borderPane.getScene().getHeight();
 
-            newVBox.getChildren().add(backButton);
-            backButton.setOnAction(backEvent -> {
-                SessionFactory factory = HibernateUtil.getFactory();
-                Session session = factory.openSession();
-                Transaction transaction = session.beginTransaction();
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/Board.fxml"));
+                Parent root = loader.load();
 
-                Board board = session.get(Board.class, vBox.getId());
-                board.setLastOpened(LocalDateTime.now());
-
-                session.update(board);
-                transaction.commit();
-
-                previousStage.setScene(previousScene);
-                previousStage.show();
-
-            });
-
-            Scene newScene = new Scene(newVBox);
-
-            Stage currentStage = (Stage) vBox.getScene().getWindow();
-            currentStage.setMaximized(true);
-            currentStage.setScene(newScene);
-
-            currentStage.show();
+                Scene scene = new Scene(root, width, height);
+                Stage stage = (Stage) borderPane.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         });
     }

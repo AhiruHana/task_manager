@@ -35,10 +35,10 @@
     <center>
         <AnchorPane prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER">
             <children>
+                <TextField fx:id="usernameField" layoutX="95.0" layoutY="158.0" promptText="Username" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
+                <TextField fx:id="lastNameField" layoutX="95.0" layoutY="232.0" promptText="LastName" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
 
-                <TextField fx:id="lastNameField" layoutX="95.0" layoutY="195.0" promptText="LastName" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
-
-                <PasswordField fx:id="passwordField" layoutX="95.0" layoutY="237.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
+                <PasswordField fx:id="passwordField" layoutX="95.0" layoutY="274.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
                 <!-- <FontAwesomeIconView fill="#0598ff" glyphName="USER" layoutX="68.0"
                 layoutY="217.0" size="20" text="" /> -->
                 <!-- <FontAwesomeIconView fill="#0598ff" glyphName="KEY" layoutX="65.0"
@@ -56,11 +56,11 @@
                 <!-- <FontAwesomeIconView fill="#0598ff" glyphName="KEY" layoutX="65.0"
                 layoutY="295.0" size="20" wrappingWidth="20.0" /> -->
 
-                <TextField fx:id="emailField" layoutX="95.0" layoutY="319.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
-                <PasswordField fx:id="confirmPasswordField" layoutX="95.0" layoutY="272.0" promptText="Confirm Password" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
-                <Button fx:id="SignIn" layoutX="123.0" layoutY="382.0" mnemonicParsing="false" onAction="#clickSignIn" prefHeight="42.0" prefWidth="85.0" style="-fx-background-color: #0598ff;" text="Sign in" />
-            <Hyperlink fx:id="Login" layoutX="151.0" layoutY="462.0" onAction="#ClickLogin" text="Login" />
-            <TextField fx:id="firstNameField" layoutX="95.0" layoutY="158.0" promptText="FristName" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
+                <TextField fx:id="emailField" layoutX="95.0" layoutY="356.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
+                <PasswordField fx:id="confirmPasswordField" layoutX="95.0" layoutY="319.0" promptText="Confirm Password" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
+                <Button fx:id="SignIn" layoutX="123.0" layoutY="419.0" mnemonicParsing="false" onAction="#clickSignIn" prefHeight="42.0" prefWidth="85.0" style="-fx-background-color: #0598ff;" text="Sign in" />
+            <Hyperlink fx:id="Login" layoutX="151.0" layoutY="499.0" onAction="#ClickLogin" text="Login" />
+            <TextField fx:id="firstNameField" layoutX="95.0" layoutY="195.0" promptText="FristName" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
 
                 <!-- <FontAwesomeIconView fill="#0598ff" glyphName="USER" layoutX="68.0"
                 layoutY="343.0" size="20" text="" /> -->

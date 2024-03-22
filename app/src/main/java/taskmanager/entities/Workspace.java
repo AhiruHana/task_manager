@@ -1,4 +1,5 @@
 package taskmanager.entities;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,6 +11,10 @@ public class Workspace {
 
   @Column(name = "name", nullable = false, length = 100)
   private String name;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   public Long getId() {
     return id;
@@ -26,4 +31,14 @@ public class Workspace {
   public void setName(String name) {
     this.name = name;
   }
+
+
+  public User getUser() {
+    return this.user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+  
 }
