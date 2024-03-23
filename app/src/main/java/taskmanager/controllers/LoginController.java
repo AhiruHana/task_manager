@@ -20,11 +20,13 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import taskmanager.App;
 import taskmanager.entities.Board;
 import taskmanager.entities.User;
 import javafx.scene.control.Hyperlink;
+
 public class LoginController {
-    
+
     @FXML
     private BorderPane borderPane;
 
@@ -34,65 +36,76 @@ public class LoginController {
     @FXML
     private TextField usernameField;
 
-       @FXML
+    @FXML
     private Hyperlink SignUp;
 
     @FXML
     private Button Login;
 
-@FXML
-void loginButtonClicked(ActionEvent event) {
-    SessionFactory factory = HibernateUtil.getFactory();
-    Session session = factory.openSession();
+    @FXML
+    void loginButtonClicked(ActionEvent event) {
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
 
-    String username = usernameField.getText();
-    String password = passwordField.getText();
+        String username = usernameField.getText();
+        String password = passwordField.getText();
 
-    Query query = session.createQuery("FROM User WHERE first_name = :firstname AND password_hash = :password");
-    query.setParameter("firstname", username);
-    query.setParameter("password", password);
-    List<User> users = query.getResultList();
+        Query query = session.createQuery(
+                "FROM User WHERE (email = :username or username= :username) AND password_hash = :password");
+        query.setParameter("username", username);
+        query.setParameter("password", password);
+        List<User> users = query.getResultList();
 
-    session.close();
+        session.close();
 
-    if (!users.isEmpty()) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Workspace.fxml"));
-            Parent root = loader.load();
+        if (!users.isEmpty()) {
+            try {
+                double width = borderPane.getScene().getWidth();
+                double height = borderPane.getScene().getHeight();
 
-            Stage stage = (Stage) Login.getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/Workspace.fxml"));
+                Parent root = loader.load();
 
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+                WorkspaceController workspaceController = loader.getController();
+                workspaceController.setUsername(username);
+                workspaceController.displayProjectList();
+                workspaceController.diplayRecentOpened();
+                workspaceController.getInfoUser();
+
+                Scene scene = new Scene(root, width, height);
+                Stage stage = (Stage) borderPane.getScene().getWindow();
+                stage.setScene(scene);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Login Failed");
+            alert.setHeaderText(null);
+            alert.setContentText("Invalid username or password!");
+            alert.showAndWait();
         }
-    } else {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Login Failed");
-        alert.setHeaderText(null);
-        alert.setContentText("Invalid username or password!");
-        alert.showAndWait();
     }
-}
 
     @FXML
     void ClickSignUp(ActionEvent event) {
         try {
-        // Load trang FXML mới
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Register.fxml"));
-        Parent root = loader.load();
+            // Load trang FXML mới
+            double width = borderPane.getScene().getWidth();
+            double height = borderPane.getScene().getHeight();
 
-        // Lấy Stage hiện tại
-        Stage stage = (Stage) SignUp.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Register.fxml"));
+            Parent root = loader.load();
 
-        // Tạo một Scene mới và đặt nó trên Stage
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
+            // Lấy Stage hiện tại
+
+            // Tạo một Scene mới và đặt nó trên Stage
+            Scene scene = new Scene(root, width, height);
+
+            Stage stage = (Stage) borderPane.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    }
-    }
+}
