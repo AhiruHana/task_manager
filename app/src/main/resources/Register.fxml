@@ -49,12 +49,11 @@
 
                 <Text fill="#0598ff" layoutX="113.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User Sign in">
 
+                <Text fill="#0598ff" layoutX="113.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up">
                     <font>
                         <Font size="20.0" />
                     </font>
                 </Text>
-                <!-- <FontAwesomeIconView fill="#0598ff" glyphName="KEY" layoutX="65.0"
-                layoutY="295.0" size="20" wrappingWidth="20.0" /> -->
 
                 <TextField fx:id="emailField" layoutX="95.0" layoutY="356.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
                 <PasswordField fx:id="confirmPasswordField" layoutX="95.0" layoutY="319.0" promptText="Confirm Password" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />

@@ -76,7 +76,7 @@ public class RegisterController {
     }
 
     @FXML
-    void clickSignIn(ActionEvent event) {
+    void clickSignUp(ActionEvent event) {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String email = emailField.getText();
@@ -122,25 +122,25 @@ public class RegisterController {
 
                     RegisterController registerController = new RegisterController();
                     var result = registerController.registerUser(firstName, lastName, email, password, username,session,transaction);
-                   
+
                     if (result>0) {
                         Alert successAlert = new Alert(Alert.AlertType.CONFIRMATION);
                         successAlert.setContentText("Register Successfully");
                         successAlert.show();
-    
+
                         try {
                             double width = borderPane.getScene().getWidth();
                             double height = borderPane.getScene().getHeight();
-    
+
                             Parent root = FXMLLoader.load(App.class.getResource("/Login.fxml"));
                             Scene scene = new Scene(root,width,height);
-    
+
                             Stage stage = (Stage) borderPane.getScene().getWindow();
                             stage.setScene(scene);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-    
+
                     } else {
                         showErrorAlert("Oops","something went wrong!");
                     }
@@ -160,7 +160,7 @@ public class RegisterController {
     }
 
     private int registerUser(String firstName, String lastName, String email, String password, String username,Session session,Transaction transaction) {
-        
+
         try {
             // Bắt đầu giao dịch
             transaction = session.beginTransaction();
@@ -177,7 +177,6 @@ public class RegisterController {
             query.setParameter("lastName", lastName);
             query.setParameter("email", email);
             query.setParameter("password", password);
-
 
             // Thực thi truy vấn
             int result = query.executeUpdate();
