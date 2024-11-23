@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <center>
         <ScrollPane prefHeight="421.0" prefWidth="632.0">
@@ -28,7 +27,7 @@
                                                 <children>
                                                     <HBox prefHeight="32.0" prefWidth="147.0">
                                                         <children>
-                                                            <TextField alignment="CENTER" text="row_1">
+                                                            <TextField alignment="CENTER" prefHeight="40.0" prefWidth="189.0" text="To Do">
                                                                 <font>
                                                                     <Font size="19.0" />
                                                                 </font>
@@ -40,7 +39,7 @@
                                                     </HBox>
                                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                                         <children>
-                                                            <TextField alignment="CENTER" prefHeight="162.0" prefWidth="147.0" text="content 1">
+                                                            <TextField alignment="CENTER" prefHeight="21.0" prefWidth="142.0" promptText="Add a card">
                                                                 <HBox.margin>
                                                                     <Insets bottom="3.0" />
                                                                 </HBox.margin>
@@ -50,24 +49,8 @@
                                                             <Insets bottom="3.0" />
                                                         </VBox.margin>
                                                     </HBox>
-                                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                                        <children>
-                                                            <TextField alignment="CENTER" prefHeight="162.0" prefWidth="147.0" text="content 2">
-                                                                <HBox.margin>
-                                                                    <Insets bottom="3.0" />
-                                                                </HBox.margin>
-                                                            </TextField>
-                                                        </children>
-                                                    </HBox>
-                                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                                        <children>
-                                                            <TextField alignment="CENTER" prefHeight="162.0" prefWidth="147.0" text="content 3">
-                                                                <HBox.margin>
-                                                                    <Insets bottom="3.0" />
-                                                                </HBox.margin>
-                                                            </TextField>
-                                                        </children>
-                                                    </HBox>
+                                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                                    <HBox prefHeight="100.0" prefWidth="200.0" />
                                                 </children>
                                                 <padding>
                                                     <Insets right="5.0" />
@@ -85,7 +68,7 @@
                                                 <children>
                                                     <HBox prefHeight="32.0" prefWidth="147.0">
                                                         <children>
-                                                            <TextField alignment="CENTER" text="row_2">
+                                                            <TextField alignment="CENTER" text="In Progress">
                                                                 <font>
                                                                     <Font size="19.0" />
                                                                 </font>
@@ -97,7 +80,7 @@
                                                     </HBox>
                                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                                         <children>
-                                                            <TextField alignment="CENTER" prefHeight="162.0" prefWidth="147.0" text="content 1">
+                                                            <TextField alignment="CENTER" prefHeight="22.0" prefWidth="142.0" promptText="Add a card">
                                                                 <HBox.margin>
                                                                     <Insets bottom="3.0" />
                                                                 </HBox.margin>
@@ -107,24 +90,8 @@
                                                             <Insets bottom="3.0" />
                                                         </VBox.margin>
                                                     </HBox>
-                                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                                        <children>
-                                                            <TextField alignment="CENTER" prefHeight="90.0" prefWidth="165.0" text="content 2">
-                                                                <HBox.margin>
-                                                                    <Insets bottom="3.0" />
-                                                                </HBox.margin>
-                                                            </TextField>
-                                                        </children>
-                                                    </HBox>
-                                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                                        <children>
-                                                            <TextField alignment="CENTER" prefHeight="162.0" prefWidth="147.0" text="content 3">
-                                                                <HBox.margin>
-                                                                    <Insets bottom="3.0" />
-                                                                </HBox.margin>
-                                                            </TextField>
-                                                        </children>
-                                                    </HBox>
+                                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                                    <HBox prefHeight="100.0" prefWidth="200.0" />
                                                 </children>
                                                 <padding>
                                                     <Insets right="5.0" />
@@ -145,7 +112,7 @@
                                                 <children>
                                                     <HBox prefHeight="32.0" prefWidth="147.0">
                                                         <children>
-                                                            <TextField alignment="CENTER" text="row_3">
+                                                            <TextField alignment="CENTER" text="Done">
                                                                 <font>
                                                                     <Font size="19.0" />
                                                                 </font>
@@ -157,7 +124,7 @@
                                                     </HBox>
                                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                                         <children>
-                                                            <TextField alignment="CENTER" prefHeight="162.0" prefWidth="147.0" text="content 1">
+                                                            <TextField alignment="CENTER" prefHeight="25.0" prefWidth="142.0" promptText="Add a card">
                                                                 <HBox.margin>
                                                                     <Insets bottom="3.0" />
                                                                 </HBox.margin>
@@ -167,24 +134,9 @@
                                                             <Insets bottom="3.0" />
                                                         </VBox.margin>
                                                     </HBox>
-                                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                                        <children>
-                                                            <TextField alignment="CENTER" prefHeight="162.0" prefWidth="147.0" text="content 2">
-                                                                <HBox.margin>
-                                                                    <Insets bottom="3.0" />
-                                                                </HBox.margin>
-                                                            </TextField>
-                                                        </children>
-                                                    </HBox>
-                                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                                        <children>
-                                                            <TextField alignment="CENTER" prefHeight="162.0" prefWidth="147.0" text="content 3">
-                                                                <HBox.margin>
-                                                                    <Insets bottom="3.0" />
-                                                                </HBox.margin>
-                                                            </TextField>
-                                                        </children>
-                                                    </HBox>
+                                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
                                                 </children>
                                                 <padding>
                                                     <Insets right="5.0" />
@@ -194,6 +146,47 @@
                                   </ScrollPane>
                               </children>
                           </VBox>
+                  <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="411.0" prefWidth="193.0">
+                     <children>
+                        <ScrollPane prefHeight="449.0" prefWidth="227.0">
+                           <content>
+                              <VBox prefHeight="333.0" prefWidth="147.0">
+                                 <children>
+                                    <HBox prefHeight="32.0" prefWidth="147.0">
+                                       <children>
+                                          <TextField alignment="CENTER" prefHeight="40.0" prefWidth="189.0" text="Lag">
+                                             <font>
+                                                <Font size="19.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <TextField alignment="CENTER" prefHeight="21.0" prefWidth="142.0" promptText="Add a card">
+                                             <HBox.margin>
+                                                <Insets bottom="3.0" />
+                                             </HBox.margin>
+                                          </TextField>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="3.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                 </children>
+                                 <padding>
+                                    <Insets right="5.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
                       </children>
                   </HBox>
             </content>
@@ -235,6 +228,42 @@
             </children>
         </HBox>
    </top>
+   <top>
+    <HBox prefHeight="41.0" prefWidth="765.0" BorderPane.alignment="CENTER">
+        <children>
+            <HBox prefHeight="42.0" prefWidth="63.0">
+                <children>
+                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Home" />
+                </children>
+            </HBox>
+            <HBox prefHeight="42.0" prefWidth="63.0">
+                <children>
+                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Board" />
+                </children>
+            </HBox>
+            <HBox prefHeight="42.0" prefWidth="87.0">
+                <children>
+                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="100.0" text="Important" />
+                </children>
+            </HBox>
+            <HBox prefHeight="42.0" prefWidth="114.0">
+                <children>
+                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" text="Back Ground" />
+                </children>
+            </HBox>
+            <HBox prefHeight="42.0" prefWidth="97.0">
+                <children>
+                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="98.0" text="new row" />
+                </children>
+            </HBox>
+            <HBox prefHeight="42.0" prefWidth="133.0">
+           <children>
+                    <TextField prefHeight="42.0" prefWidth="200.0" text="search..." />
+           </children>
+            </HBox>
+        </children>
+    </HBox>
+</top>
    <left>
         <VBox prefHeight="421.0" prefWidth="181.0" BorderPane.alignment="CENTER">
             <children>
@@ -244,7 +273,7 @@
                             <children>
                                 <HBox prefHeight="85.0" prefWidth="138.0">
                                     <children>
-                                        <Label alignment="CENTER" prefHeight="136.0" prefWidth="237.0" text="Home">
+                                        <Label alignment="CENTER" prefHeight="85.0" prefWidth="189.0" text="Board A">
                                             <font>
                                                 <Font name="System Bold" size="24.0" />
                                             </font>
@@ -252,37 +281,16 @@
                                     </children>
                                 </HBox>
                                 <HBox prefHeight="34.0" prefWidth="138.0">
-                                    <children>
-                                        <TextField alignment="CENTER" prefHeight="34.0" prefWidth="186.0" text="row_1">
-                                            <font>
-                                                <Font name="Calibri Bold Italic" size="19.0" />
-                                            </font>
-                                        </TextField>
-                                    </children>
                                     <padding>
                                         <Insets bottom="5.0" />
                                     </padding>
                                 </HBox>
                                 <HBox prefHeight="34.0" prefWidth="138.0">
-                                    <children>
-                                        <TextField alignment="CENTER" prefHeight="34.0" prefWidth="186.0" text="row_2">
-                                            <font>
-                                                <Font name="Calibri Bold Italic" size="19.0" />
-                                            </font>
-                                        </TextField>
-                                    </children>
                                     <padding>
                                         <Insets bottom="5.0" />
                                     </padding>
                                 </HBox>
                                 <HBox prefHeight="34.0" prefWidth="138.0">
-                                    <children>
-                                        <TextField alignment="CENTER" prefHeight="34.0" prefWidth="186.0" text="row_3">
-                                            <font>
-                                                <Font name="Calibri Bold Italic" size="19.0" />
-                                            </font>
-                                        </TextField>
-                                    </children>
                                     <padding>
                                         <Insets bottom="5.0" />
                                     </padding>
