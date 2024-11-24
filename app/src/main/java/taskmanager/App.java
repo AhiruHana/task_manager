@@ -22,7 +22,7 @@ public class App extends Application {
         scene = new Scene(loadFXML("Login"));
 
         primaryStage.setScene(scene);
-        primaryStage.setMaximized(true);
+        primaryStage.setMaximized(false);
         primaryStage.show();
 
     }
