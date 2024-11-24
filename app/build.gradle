@@ -43,7 +43,7 @@ java {
     }
 }
 javafx {
-    version = "17.0.9"
+    version = "21.0.5"
     modules = ['javafx.controls', 'javafx.fxml']
 }
 application {

@@ -76,7 +76,7 @@ public class RegisterController {
     }
 
     @FXML
-    void clickSignUp(ActionEvent event) {
+    void ClickSignUp(ActionEvent event) {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String email = emailField.getText();
