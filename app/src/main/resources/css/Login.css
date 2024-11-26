@@ -1,0 +1,100 @@
+/* General Styles */
+* {
+  -fx-font-family: "Arial", sans-serif;
+}
+
+#borderPane {
+  -fx-background-color: #f8f9fa;  /* Light background color */
+}
+
+.AnchorPane {
+  -fx-padding: 10px;
+}
+
+/* Header Text */
+#borderPane Text {
+  -fx-font-size: 32px;
+  -fx-fill: #0598ff;
+  -fx-font-weight: bold;
+}
+
+/* Input fields */
+TextField, PasswordField {
+  -fx-background-color: transparent;
+  -fx-border-color: #ced4da;
+  -fx-border-radius: 5px;
+  -fx-padding: 10px;
+  -fx-font-size: 16px;
+  -fx-text-fill: #495057;
+  -fx-border-width: 0px 0px 2px 0px;
+  -fx-focus-color: #80bdff;
+}
+
+TextField:focused, PasswordField:focused {
+  -fx-border-color: #80bdff;
+}
+
+/* Button */
+#Login {
+  -fx-background-color: #0598ff;
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-border-radius: 5px;
+  -fx-padding: 10px;
+  -fx-cursor: hand;
+  -fx-focus-color: transparent;
+}
+
+#Login:hover {
+  -fx-background-color: #007bff;
+}
+
+/* Hyperlink */
+Hyperlink {
+  -fx-text-fill: #0598ff;
+  -fx-font-size: 14px;
+  -fx-cursor: hand;
+}
+
+Hyperlink:hover {
+  -fx-text-fill: #007bff;
+}
+
+/* Bottom Links */
+Hyperlink:empty {
+  -fx-font-size: 14px;
+  -fx-text-fill: #495057;
+}
+
+Hyperlink:empty:hover {
+  -fx-text-fill: #007bff;
+}
+
+/* Center Alignment for the Login form */
+#center {
+  -fx-alignment: center;
+}
+
+#center TextField, #center PasswordField {
+  -fx-max-width: 300px;
+}
+
+#center Button {
+  -fx-max-width: 200px;
+}
+
+/* Adjust margins and paddings */
+#center {
+  -fx-padding: 20px;
+}
+
+/* Style for the Sign Up and Forgot Password links */
+#SignUp {
+  -fx-font-size: 14px;
+  -fx-text-fill: #007bff;
+  -fx-cursor: hand;
+}
+
+#SignUp:hover {
+  -fx-text-fill: #0056b3;
+}
