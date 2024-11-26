@@ -1,12 +1,5 @@
 package taskmanager.controllers;
 
-import java.io.IOException;
-import java.net.URL;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,9 +14,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.entities.User;
-import taskmanager.utils.HibernateUtil;
-import taskmanager.utils.PasswordUtil;
+import taskmanager.services.AuthenticationService;
 import taskmanager.exceptions.AuthenticationFailed;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class LoginController {
 
@@ -42,6 +37,12 @@ public class LoginController {
     @FXML
     private Button Login;
 
+    private AuthenticationService authService;
+
+    public LoginController() {
+        this.authService = new AuthenticationService(); // Initialize the service
+    }
+
     public void initialize() {
         try {
             URL cssUrl = getClass().getResource("/css/Login.css");
@@ -57,29 +58,12 @@ public class LoginController {
 
     @FXML
     void authenticate(ActionEvent event) {
-        SessionFactory factory = HibernateUtil.getFactory();
-        Session session = factory.openSession();
-
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        Query query = session.createQuery(
-                "FROM User WHERE (email = :username or username= :username)");
-        query.setParameter("username", username);
-        List<User> users = query.getResultList();
-
-        session.close();
-
         try {
-            if (users.isEmpty()) {
-                throw new AuthenticationFailed(401, "Invalid username or password");
-            }
-
-            User user = users.get(0);
-
-            if (!PasswordUtil.checkPassword(password, user.getPasswordDigest())) {
-                throw new AuthenticationFailed(401, "Invalid username or password");
-            }
+            // TODO: Use this user to get workspaces
+            User user = authService.authenticate(username, password); // Delegate to the service
 
             double width = borderPane.getScene().getWidth();
             double height = borderPane.getScene().getHeight();
