@@ -54,7 +54,7 @@ public class RegisterController {
     private TextField usernameField;
 
     @FXML
-    void ClickLogin(ActionEvent event) {
+    void goToLogIn(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
             Parent root = loader.load();
@@ -70,7 +70,7 @@ public class RegisterController {
     }
 
     @FXML
-    void ClickSignUp(ActionEvent event) {
+    void signUp(ActionEvent event) {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String email = emailField.getText();
@@ -161,7 +161,7 @@ public class RegisterController {
             String sql = "INSERT INTO users (username,first_Name, last_Name,  email, password_digest) VALUES (:username, :firstName, :lastName, :email, :password_digest)";
 
             Query query = session.createSQLQuery(sql);
-            
+
 
             query.setParameter("username", username);
             query.setParameter("firstName", firstName);

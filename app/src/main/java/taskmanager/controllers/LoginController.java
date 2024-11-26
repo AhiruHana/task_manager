@@ -15,7 +15,12 @@ import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.entities.User;
 import taskmanager.services.AuthenticationService;
+import taskmanager.services.SessionManager;
+import taskmanager.utils.JWTUtil;
+import taskmanager.utils.CommonUtil;
 import taskmanager.exceptions.AuthenticationFailed;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,9 +43,11 @@ public class LoginController {
     private Button Login;
 
     private AuthenticationService authService;
+    private CommonUtil commonUtil;
 
     public LoginController() {
         this.authService = new AuthenticationService(); // Initialize the service
+        this.commonUtil = new CommonUtil();
     }
 
     public void initialize() {
@@ -63,8 +70,28 @@ public class LoginController {
 
         try {
             // TODO: Use this user to get workspaces
-            User user = authService.authenticate(username, password); // Delegate to the service
+            User user = authService.authenticate(username, password);
 
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("username", username);
+
+            String token = JWTUtil.generateToken(claims);
+
+            SessionManager.saveSessionToken(token);
+
+            openMainApp(username);
+        } catch (AuthenticationFailed e) {
+            commonUtil.showErrorMessage("Login failed!", "Invalid username or password");
+        }
+    }
+
+    @FXML
+    public void GoToSignUp(ActionEvent event) {
+        commonUtil.newScene(borderPane);
+    }
+
+    private void openMainApp(String username) {
+        try {
             double width = borderPane.getScene().getWidth();
             double height = borderPane.getScene().getHeight();
 
@@ -78,30 +105,6 @@ public class LoginController {
             workspaceController.getInfoUser();
 
             Scene scene = new Scene(root, width, height);
-            Stage stage = (Stage) borderPane.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (AuthenticationFailed e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Login Failed");
-            alert.setHeaderText(null);
-            alert.setContentText("Invalid username or password!");
-            alert.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    void ClickSignUp(ActionEvent event) {
-        try {
-            double width = borderPane.getScene().getWidth();
-            double height = borderPane.getScene().getHeight();
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Register.fxml"));
-            Parent root = loader.load();
-
-            Scene scene = new Scene(root, width, height);
-
             Stage stage = (Stage) borderPane.getScene().getWindow();
             stage.setScene(scene);
         } catch (IOException e) {

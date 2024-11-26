@@ -1,0 +1,31 @@
+package taskmanager.services;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class SessionManager {
+
+    private static final String SESSION_FILE = "userSession.jwt";
+
+    // Save JWT token to a file
+    public static void saveSessionToken(String token) {
+        try (FileOutputStream out = new FileOutputStream(SESSION_FILE)) {
+            out.write(token.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Load JWT token from the file
+    public static String loadSessionToken() {
+        try (FileInputStream in = new FileInputStream(SESSION_FILE)) {
+            byte[] data = new byte[(int) in.available()];
+            in.read(data);
+            return new String(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
