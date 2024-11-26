@@ -17,7 +17,7 @@ public class Board {
   @Column(name = "color", nullable = false, length = 100)
   private String color;
 
-  @Column(name = "lastOpened", nullable = false, length = 100)
+  @Column(name = "last_opened", nullable = false, length = 100)
   private LocalDateTime lastOpened;
 
   @ManyToOne(fetch = FetchType.LAZY)

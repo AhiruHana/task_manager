@@ -11,6 +11,9 @@ public class Task {
   @Column(name = "name", nullable = false, length = 100)
   private String name;
 
+  @Column(name = "description", nullable = false, length = 255)
+  private String description;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "col_id", nullable = false)
   private Col col;
