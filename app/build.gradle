@@ -24,6 +24,7 @@ dependencies {
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.3.0'
     implementation 'org.hibernate:hibernate-core:5.5.7.Final'
     implementation 'javax.persistence:javax.persistence-api:2.2'
+    implementation "org.mindrot:jbcrypt:0.4"
 }
 
 testing {
@@ -45,6 +46,13 @@ java {
 javafx {
     version = "21.0.5"
     modules = ['javafx.controls', 'javafx.fxml']
+}
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
 }
 application {
     // Define the main class for the application.

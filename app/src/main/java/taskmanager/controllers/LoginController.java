@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import java.util.List;
 
@@ -21,9 +20,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import taskmanager.App;
-import taskmanager.entities.Board;
 import taskmanager.entities.User;
-import javafx.scene.control.Hyperlink;
+import taskmanager.utils.HibernateUtil;
 
 public class LoginController {
 
@@ -50,8 +48,9 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
+        // TODO: Fix this query
         Query query = session.createQuery(
-                "FROM User WHERE (email = :username or username= :username) AND password_hash = :password");
+                "FROM User WHERE (email = :username or username= :username) AND password_digest = :password");
         query.setParameter("username", username);
         query.setParameter("password", password);
         List<User> users = query.getResultList();

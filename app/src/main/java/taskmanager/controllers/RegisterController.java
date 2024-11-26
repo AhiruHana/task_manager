@@ -18,14 +18,11 @@ import javafx.stage.Stage;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.annotations.Filters;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.mapping.List;
 import org.hibernate.query.Query;
 
 import taskmanager.App;
-import taskmanager.entities.Board;
-import taskmanager.entities.User;
+import taskmanager.utils.HibernateUtil;
+import taskmanager.utils.PasswordUtil;
 
 public class RegisterController {
 
@@ -59,14 +56,11 @@ public class RegisterController {
     @FXML
     void ClickLogin(ActionEvent event) {
         try {
-            // Load trang FXML mới
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
             Parent root = loader.load();
 
-            // Lấy Stage hiện tại
             Stage stage = (Stage) Login.getScene().getWindow();
 
-            // Tạo một Scene mới và đặt nó trên Stage
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
@@ -162,37 +156,30 @@ public class RegisterController {
     private int registerUser(String firstName, String lastName, String email, String password, String username,Session session,Transaction transaction) {
 
         try {
-            // Bắt đầu giao dịch
             transaction = session.beginTransaction();
 
-            // Tạo câu lệnh INSERT INTO với tham số hóa
-            String sql = "INSERT INTO users (username,first_Name, last_Name,  email, password_hash) VALUES (:username, :firstName, :lastName, :email, :password)";
+            String sql = "INSERT INTO users (username,first_Name, last_Name,  email, password_digest) VALUES (:username, :firstName, :lastName, :email, :password_digest)";
 
-            // Tạo truy vấn từ câu lệnh SQL
             Query query = session.createSQLQuery(sql);
+            
 
-            // Đặt giá trị cho các tham số
             query.setParameter("username", username);
             query.setParameter("firstName", firstName);
             query.setParameter("lastName", lastName);
             query.setParameter("email", email);
-            query.setParameter("password", password);
+            query.setParameter("password_digest", PasswordUtil.hashPassword(password));
 
-            // Thực thi truy vấn
             int result = query.executeUpdate();
 
-            // Commit giao dịch
             transaction.commit();
             return result;
         } catch (Exception e) {
-            // Xảy ra lỗi, rollback giao dịch
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
             return 0;
         } finally {
-            // Đóng session
             session.close();
         }
     }

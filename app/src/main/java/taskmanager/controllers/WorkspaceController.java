@@ -24,6 +24,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.entities.Board;
+import taskmanager.utils.HibernateUtil;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;

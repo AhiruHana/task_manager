@@ -1,4 +1,4 @@
-package taskmanager.controllers;
+package taskmanager.utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
