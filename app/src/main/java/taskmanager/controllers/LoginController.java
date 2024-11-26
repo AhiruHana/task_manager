@@ -89,16 +89,12 @@ public class LoginController {
     @FXML
     void ClickSignUp(ActionEvent event) {
         try {
-            // Load trang FXML mới
             double width = borderPane.getScene().getWidth();
             double height = borderPane.getScene().getHeight();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Register.fxml"));
             Parent root = loader.load();
 
-            // Lấy Stage hiện tại
-
-            // Tạo một Scene mới và đặt nó trên Stage
             Scene scene = new Scene(root, width, height);
 
             Stage stage = (Stage) borderPane.getScene().getWindow();

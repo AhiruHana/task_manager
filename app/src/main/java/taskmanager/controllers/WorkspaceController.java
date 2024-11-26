@@ -77,19 +77,7 @@ public class WorkspaceController {
     public void setUsername(String username) {
         this.username = username;
     }
-
-    // @Override
-    // public void initialize(URL location, ResourceBundle resources) {
-    // borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-    // responseWidth(newWidth.doubleValue());
-
-    // });
-
-    // displayProjectList();
-    // diplayRecentOpened();
-
-    // }
-
+    
     private String generateRandomColor() {
         Random random = new Random();
         int r = random.nextInt(256);
