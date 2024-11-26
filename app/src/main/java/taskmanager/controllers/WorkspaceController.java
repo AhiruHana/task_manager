@@ -185,7 +185,7 @@ public class WorkspaceController {
                 "SELECT b FROM Board b " +
                         "JOIN b.workspace w " +
                         "JOIN w.user u " +
-                        "WHERE u.username = :username or email= : username ORDER BY lastOpened DESC");
+                        "WHERE u.username = :username or email= : username ORDER BY last_opened DESC");
         query.setParameter("username", username);
         query.setMaxResults(3);
 

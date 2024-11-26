@@ -7,8 +7,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import java.util.List;
-
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +22,8 @@ import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.entities.User;
 import taskmanager.utils.HibernateUtil;
+import taskmanager.utils.PasswordUtil;
+import taskmanager.exceptions.AuthenticationFailed;
 
 public class LoginController {
 
@@ -56,48 +56,54 @@ public class LoginController {
     }
 
     @FXML
-    void loginButtonClicked(ActionEvent event) {
+    void authenticate(ActionEvent event) {
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
 
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        // TODO: Fix this query
         Query query = session.createQuery(
-                "FROM User WHERE (email = :username or username= :username) AND password_digest = :password");
+                "FROM User WHERE (email = :username or username= :username)");
         query.setParameter("username", username);
-        query.setParameter("password", password);
         List<User> users = query.getResultList();
 
         session.close();
 
-        if (!users.isEmpty()) {
-            try {
-                double width = borderPane.getScene().getWidth();
-                double height = borderPane.getScene().getHeight();
-
-                FXMLLoader loader = new FXMLLoader(App.class.getResource("/Workspace.fxml"));
-                Parent root = loader.load();
-
-                WorkspaceController workspaceController = loader.getController();
-                workspaceController.setUsername(username);
-                workspaceController.displayProjectList();
-                workspaceController.diplayRecentOpened();
-                workspaceController.getInfoUser();
-
-                Scene scene = new Scene(root, width, height);
-                Stage stage = (Stage) borderPane.getScene().getWindow();
-                stage.setScene(scene);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            if (users.isEmpty()) {
+                throw new AuthenticationFailed(401, "Invalid username or password");
             }
-        } else {
+
+            User user = users.get(0);
+
+            if (!PasswordUtil.checkPassword(password, user.getPasswordDigest())) {
+                throw new AuthenticationFailed(401, "Invalid username or password");
+            }
+
+            double width = borderPane.getScene().getWidth();
+            double height = borderPane.getScene().getHeight();
+
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/Workspace.fxml"));
+            Parent root = loader.load();
+
+            WorkspaceController workspaceController = loader.getController();
+            workspaceController.setUsername(username);
+            workspaceController.displayProjectList();
+            workspaceController.diplayRecentOpened();
+            workspaceController.getInfoUser();
+
+            Scene scene = new Scene(root, width, height);
+            Stage stage = (Stage) borderPane.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (AuthenticationFailed e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Login Failed");
             alert.setHeaderText(null);
             alert.setContentText("Invalid username or password!");
             alert.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
