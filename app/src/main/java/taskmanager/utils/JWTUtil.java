@@ -2,41 +2,31 @@ package taskmanager.utils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.Claims;
-
 import java.util.Date;
-import java.util.Map;
 
-public class JWTUtil {
+public class JwtUtil {
 
-    private static final String SECRET_KEY = "my-secret-key"; // Secret key for signing JWT
+    private static final String SECRET_KEY = "your_secret_key";
 
-    // Generate JWT Token
-    public static String generateToken(Map<String, Object> claims) {
+    public static String generateToken(Long userId) {
+        long expirationTime = 1000 * 60 * 60 * 24; // Token expires in 1 day
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + expirationTime);
+
         return Jwts.builder()
-                .setClaims(claims)  // Set claims (user data)
-                .setIssuedAt(new Date())  // Set issue date
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))  // Set expiration time (e.g., 1 day)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)  // Sign with secret key
+                .setSubject(String.valueOf(userId))
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
-    // Parse JWT Token
-    public static Claims parseToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET_KEY) // Set secret key to validate the token
+    // Optionally, you could add a method to parse and validate the token
+    public static int parseToken(String token) {
+        return Integer.parseInt(Jwts.parser()
+                .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
-                .getBody(); // Returns the claims from the token
-    }
-
-    // Validate Token (Check if it's expired or invalid)
-    public static boolean isValidToken(String token) {
-        try {
-            Claims claims = parseToken(token);
-            Date expiration = claims.getExpiration();
-            return expiration.after(new Date());
-        } catch (Exception e) {
-            return false;  // Invalid or expired token
-        }
+                .getBody()
+                .getSubject());
     }
 }

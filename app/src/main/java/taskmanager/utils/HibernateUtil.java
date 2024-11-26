@@ -6,6 +6,7 @@ import org.hibernate.cfg.Configuration;
 import taskmanager.entities.Task;
 import taskmanager.entities.Board;
 import taskmanager.entities.Col;
+import taskmanager.entities.JwtToken;
 import taskmanager.entities.TaskAssignment;
 import taskmanager.entities.User;
 import taskmanager.entities.Workspace;
@@ -25,6 +26,7 @@ public class HibernateUtil {
         conf.addAnnotatedClass(TaskAssignment.class);
         conf.addAnnotatedClass(User.class);
         conf.addAnnotatedClass(Workspace.class);
+        conf.addAnnotatedClass(JwtToken.class);
 
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
         .applySettings(conf.getProperties())

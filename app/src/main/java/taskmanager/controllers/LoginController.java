@@ -16,7 +16,7 @@ import taskmanager.App;
 import taskmanager.entities.User;
 import taskmanager.services.AuthenticationService;
 import taskmanager.services.SessionManager;
-import taskmanager.utils.JWTUtil;
+import taskmanager.utils.JwtUtil;
 import taskmanager.utils.CommonUtil;
 import taskmanager.exceptions.AuthenticationFailed;
 import java.util.HashMap;
@@ -75,8 +75,9 @@ public class LoginController {
             Map<String, Object> claims = new HashMap<>();
             claims.put("username", username);
 
-            String token = JWTUtil.generateToken(claims);
-
+            Long userId = (Long) claims.get("userId");
+            String token = JwtUtil.generateToken(userId);
+            System.out.println(token);
             SessionManager.saveSessionToken(token);
 
             openMainApp(username);
