@@ -32,8 +32,9 @@ public class JWTUtil {
     // Validate Token (Check if it's expired or invalid)
     public static boolean isValidToken(String token) {
         try {
-            parseToken(token); // Try to parse the token
-            return true;
+            Claims claims = parseToken(token);
+            Date expiration = claims.getExpiration();
+            return expiration.after(new Date());
         } catch (Exception e) {
             return false;  // Invalid or expired token
         }

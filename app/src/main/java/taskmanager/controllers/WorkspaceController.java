@@ -71,13 +71,13 @@ public class WorkspaceController {
             e.printStackTrace();
         }
     }
-    
+
     private String username;
 
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
     private String generateRandomColor() {
         Random random = new Random();
         int r = random.nextInt(256);
@@ -95,7 +95,7 @@ public class WorkspaceController {
         menuSideBar.setPrefWidth(menuSideBarWidth);
     }
 
-    void displayProjectList() {
+    public void displayProjectList() {
 
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
@@ -178,7 +178,7 @@ public class WorkspaceController {
         }
     }
 
-    void diplayRecentOpened() {
+    public void diplayRecentOpened() {
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
         Query query = session.createQuery(

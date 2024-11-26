@@ -4,25 +4,49 @@
 package taskmanager;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import taskmanager.controllers.WorkspaceController;
+import taskmanager.services.SessionManager;
+import taskmanager.utils.CommonUtil;
+import taskmanager.utils.JWTUtil;
 
 public class App extends Application {
 
     private static Scene scene;
+    private CommonUtil commonUtil;
+
+    public void App() {
+        this.commonUtil = new CommonUtil();
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        String token = SessionManager.loadSessionToken();
 
+        if (token != null && JWTUtil.isValidToken(token)) {
+            Map<String, Object> claims = JWTUtil.parseToken(token);
+            String username = (String) claims.get("username");
 
-        scene = new Scene(loadFXML("Login"));
+            // TODO: Set the actual message to a notification or something
+            System.out.println("Welcome back, " + username);
 
-        primaryStage.setScene(scene);
-        primaryStage.setMaximized(false);
+            // commonUtil.openMainApp(username, primaryStage);
+            scene = new Scene(loadFXML("Workspace"));
+            // TODO: Load workspace information
+            // TODO: Fix height, width when switching screen
+
+            primaryStage.setScene(scene);
+        } else {
+            scene = new Scene(loadFXML("Login"));
+            primaryStage.setScene(scene);
+        }
+
         primaryStage.show();
 
     }
