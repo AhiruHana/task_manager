@@ -1,0 +1,105 @@
+/* General layout styling */
+#borderPane {
+  -fx-background-color: #F4F5F7;
+}
+
+/* Menu bar */
+MenuBar {
+  -fx-background-color: #026AA7;
+  -fx-text-fill: white;
+}
+
+MenuBar .menu {
+  -fx-text-fill: white;
+}
+
+MenuBar .menu:hover {
+  -fx-background-color: #005082;
+  -fx-text-fill: white;
+}
+
+/* Sidebar styling */
+#menuSideBar {
+  -fx-background-color: #172B4D;
+  -fx-padding: 10;
+}
+
+#menuSideBar Label {
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-padding: 5 10;
+}
+
+#logout {
+  -fx-background-color: #FF5630;
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-cursor: hand;
+  -fx-padding: 5 10;
+  -fx-border-radius: 5;
+  -fx-background-radius: 5;
+}
+
+#logout:hover {
+  -fx-background-color: #FF7452;
+}
+
+/* Main content area */
+VBox > Label {
+  -fx-text-fill: #5E6C84;
+  -fx-font-size: 16px;
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-padding: 10;
+}
+
+GridPane {
+  -fx-background-color: white;
+  -fx-border-color: #E0E0E0;
+  -fx-border-radius: 8;
+  -fx-padding: 10;
+  -fx-border-width: 1;
+  -fx-background-radius: 8;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 3);
+}
+
+/* Workspace cards */
+GridPane > .card {
+  -fx-background-color: #FFFFFF;
+  -fx-padding: 15;
+  -fx-border-radius: 5;
+  -fx-background-radius: 5;
+  -fx-border-color: #DFE1E6;
+  -fx-border-width: 1;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
+  -fx-cursor: hand;
+}
+
+GridPane > .card:hover {
+  -fx-background-color: #FAFBFC;
+  -fx-border-color: #C1C7D0;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 8, 0, 0, 2);
+}
+
+/* Fonts */
+.card Label {
+  -fx-text-fill: #172B4D;
+  -fx-font-size: 14px;
+  -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.card:hover Label {
+  -fx-text-fill: #0052CC;
+}
+
+/* Recently viewed styling */
+#recentlyOpened {
+  -fx-background-color: #F4F5F7;
+  -fx-border-color: transparent;
+}
+
+#recentlyOpened .card {
+  -fx-background-color: white;
+  -fx-border-color: #E0E0E0;
+}

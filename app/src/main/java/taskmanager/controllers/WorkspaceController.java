@@ -24,6 +24,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.entities.Board;
+import taskmanager.services.SessionManager;
 import taskmanager.utils.HibernateUtil;
 
 import org.hibernate.Session;
@@ -55,17 +56,32 @@ public class WorkspaceController {
     @FXML
     private Button logout;
 
+    public void initialize() {
+        try {
+            URL cssUrl = getClass().getResource("/css/Workspace.css");
+            if (cssUrl != null) {
+                borderPane.getStylesheets().add(cssUrl.toExternalForm());
+            } else {
+                System.out.println("CSS file not found!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void logout(ActionEvent event) {
         try {
-            double width = borderPane.getScene().getWidth();
-            double height = borderPane.getScene().getHeight();
+            double width = 1024;
+            double height = 864;
 
             Parent root = FXMLLoader.load(App.class.getResource("/Login.fxml"));
             Scene scene = new Scene(root, width, height);
 
             Stage stage = (Stage) borderPane.getScene().getWindow();
             stage.setScene(scene);
+
+            SessionManager.clearSessionToken();
 
         } catch (IOException e) {
             e.printStackTrace();

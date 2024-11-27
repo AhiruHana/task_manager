@@ -14,6 +14,8 @@ public class App extends Application {
 
     private static Scene scene;
     private CommonUtil commonUtil;
+    private double width = 1024;
+    private double height = 864;
 
     public App() {
         this.commonUtil = new CommonUtil();
@@ -21,12 +23,16 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.out.println("Start");
         String token = SessionManager.loadSessionToken();  // Get the token (from the database or session)
+        System.out.println("Got the token: " + token);
 
         if (token != null) {
             try {
-                long userId = JwtUtil.parseToken(token);  // Parse the token to get the userId
 
+                long userId = JwtUtil.parseToken(token);  // Parse the token to get the userId
+                System.out.println(userId);
+                // TODO: Handle if userId == 0
                 // Optionally, use the userId to fetch more details (like username) from the database
                 // For example:
                 // User user = getUserFromDatabase(userId);
@@ -35,17 +41,18 @@ public class App extends Application {
                 // If the token is valid and we have a user ID, proceed
                 System.out.println("Welcome back, user ID: " + userId);
 
-                scene = new Scene(loadFXML("Workspace"));  // Load the main workspace screen
+                scene = new Scene(loadFXML("Workspace"), width, height);  // Load the main workspace screen
                 primaryStage.setScene(scene);
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 // If token is invalid or can't be parsed, show the login screen
                 System.out.println("Opps? ");
-                scene = new Scene(loadFXML("Login"));
+                scene = new Scene(loadFXML("Login"), width, height);
                 primaryStage.setScene(scene);
             }
         } else {
             // No token means the user is not logged in, show the login screen
-            scene = new Scene(loadFXML("Login"));
+            scene = new Scene(loadFXML("Login"), width, height);
             primaryStage.setScene(scene);
         }
 

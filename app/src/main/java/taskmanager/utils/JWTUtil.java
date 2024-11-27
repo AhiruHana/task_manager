@@ -22,11 +22,21 @@ public class JwtUtil {
     }
 
     // Optionally, you could add a method to parse and validate the token
-    public static int parseToken(String token) {
-        return Integer.parseInt(Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject());
+    public static long parseToken(String token) {
+        try {
+            return Long.parseLong(Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject());
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            System.err.println("It happened");
+            e.printStackTrace();
+            return 0;
+        } catch (io.jsonwebtoken.JwtException e) {
+            System.err.println("It happened");
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

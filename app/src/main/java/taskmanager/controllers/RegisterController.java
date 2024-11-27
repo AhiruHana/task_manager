@@ -1,6 +1,7 @@
 package taskmanager.controllers;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -61,7 +62,7 @@ public class RegisterController {
 
             Stage stage = (Stage) Login.getScene().getWindow();
 
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 1024, 864);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -123,11 +124,11 @@ public class RegisterController {
                         successAlert.show();
 
                         try {
-                            double width = borderPane.getScene().getWidth();
-                            double height = borderPane.getScene().getHeight();
+                            double width = 1024;
+                            double height = 864;
 
                             Parent root = FXMLLoader.load(App.class.getResource("/Login.fxml"));
-                            Scene scene = new Scene(root,width,height);
+                            Scene scene = new Scene(root, width, height);
 
                             Stage stage = (Stage) borderPane.getScene().getWindow();
                             stage.setScene(scene);

@@ -43,7 +43,7 @@
 
                 <TextField fx:id="emailField" layoutX="95.0" layoutY="356.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 0px 0px 2px 0px;" />
                 <Button fx:id="SignIn" layoutX="123.0" layoutY="419.0" mnemonicParsing="false" onAction="#signUp" prefHeight="42.0" prefWidth="85.0" style="-fx-background-color: #0598ff;" text="Sign Up" />
-            <Hyperlink fx:id="Login" layoutX="151.0" layoutY="499.0" onAction="#goToLogIn" text="Login" />
+                <Hyperlink fx:id="Login" layoutX="151.0" layoutY="499.0" onAction="#goToLogIn" text="Go to login" />
             </children>
         </AnchorPane>
     </center>
