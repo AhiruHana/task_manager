@@ -24,6 +24,7 @@ import org.hibernate.query.Query;
 import taskmanager.App;
 import taskmanager.entities.User;
 import taskmanager.entities.Workspace;
+import taskmanager.utils.AuthenticationUtil;
 import taskmanager.utils.CommonUtil;
 import taskmanager.utils.HibernateUtil;
 import taskmanager.utils.PasswordUtil;
@@ -58,10 +59,12 @@ public class RegisterController {
     private TextField usernameField;
 
     private CommonUtil commonUtil;
+    private AuthenticationUtil authUtil;
 
     public void initialize() {
         try {
-            commonUtil = new CommonUtil();
+            this.commonUtil = new CommonUtil();
+            this.authUtil = new AuthenticationUtil();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,7 +142,7 @@ public class RegisterController {
                     transaction.commit();
 
                     commonUtil.showSuccessMessage(Alert.AlertType.INFORMATION, "Register Successfully");
-                    commonUtil.signIn(user.getId());
+                    authUtil.signIn(user.getId());
                     commonUtil.openMainApp(borderPane);
                 } else {
                     commonUtil.showErrorAlert("Registration Error", "Failed to register.");

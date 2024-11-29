@@ -25,6 +25,7 @@ import taskmanager.entities.Board;
 import taskmanager.entities.User;
 import taskmanager.entities.Workspace;
 import taskmanager.services.SessionManager;
+import taskmanager.utils.AuthenticationUtil;
 import taskmanager.utils.CommonUtil;
 import taskmanager.utils.HibernateUtil;
 
@@ -56,7 +57,7 @@ public class WorkspaceController {
     @FXML
     private Button logout;
 
-    private CommonUtil commonUtil;
+    private AuthenticationUtil authUtil;
     private User currentUser;
 
     public void initialize() {
@@ -68,9 +69,9 @@ public class WorkspaceController {
                 System.out.println("CSS file not found!");
             }
 
-            this.commonUtil = new CommonUtil();
+            this.authUtil = new AuthenticationUtil();
 
-            this.currentUser = commonUtil.currentUser();
+            this.currentUser = authUtil.currentUser();
             displayProjectList();
             displayRecentOpened();
             getInfoUser();
