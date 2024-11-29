@@ -18,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -61,8 +60,8 @@ public class BoardController {
 
     private Long boardId;
 
-    public void setId(Long boardId) {
-        this.boardId = boardId;
+    public void setId(Long id) {
+        this.boardId = id;
     }
 
     public void displayBoardName(Long boardId) {
@@ -100,7 +99,7 @@ public class BoardController {
                     boardNameTextfield.setText(board.getName());
 
                     boardNameTextfield.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-                        if (isNowFocused) { 
+                        if (isNowFocused) {
                             boardNameTextfield.selectAll();
                         }
                     });
@@ -322,16 +321,16 @@ public class BoardController {
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
         Transaction transaction = null;
-    
+
         try {
             transaction = session.beginTransaction();
-    
+
             Board board = session.get(Board.class, boardId);
             if (board != null) {
                 board.setName(newName);
                 session.update(board);
             }
-    
+
             transaction.commit();
             System.out.println("Board name updated successfully!");
         } catch (Exception e) {

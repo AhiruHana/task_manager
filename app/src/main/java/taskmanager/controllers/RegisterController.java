@@ -63,7 +63,7 @@ public class RegisterController {
 
     public void initialize() {
         try {
-            this.commonUtil = new CommonUtil();
+            commonUtil = new CommonUtil();
             this.authUtil = new AuthenticationUtil();
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,23 +86,15 @@ public class RegisterController {
     }
 
     public void signUp(ActionEvent event) {
-        String firstName = firstNameField.getText();
-        String lastName = lastNameField.getText();
-        String email = emailField.getText();
-        String password = passwordField.getText();
-        String confirmPassword = confirmPasswordField.getText();
-        String username = usernameField.getText();
+        String firstName = firstNameField.getText().trim();
+        String lastName = lastNameField.getText().trim();
+        String email = emailField.getText().trim();
+        String password = passwordField.getText().trim();
+        String confirmPassword = confirmPasswordField.getText().trim();
+        String username = usernameField.getText().trim();
 
-        if (username.equals("")) {
-            commonUtil.showErrorAlert("Oops", "Username must be not empty!");
-        } else if (password.equals("")) {
-            commonUtil.showErrorAlert("Oops", "Password must be not empty!");
-        } else if (confirmPassword.equals("")) {
-            commonUtil.showErrorAlert("Oops", "Confirm Password must be not empty!");
-        } else if (email.equals("")) {
-            commonUtil.showErrorAlert("Oops", "Email must be not empty!");
-        } else if (!confirmPassword.equals(password)) {
-            commonUtil.showErrorAlert("Oops", "Password and confirm password do not match!");
+        if (!confirmPassword.equals(password)) {
+            CommonUtil.showErrorAlert("Oops", "Password and confirm password do not match!");
         } else {
             SessionFactory factory = HibernateUtil.getFactory();
             Session session = factory.openSession();
@@ -129,10 +121,9 @@ public class RegisterController {
 
                 // Tạo user mới
                 RegisterController registerController = new RegisterController();
-                Long userId = registerController.registerUser(firstName, lastName, email, password, username);
+                User user = registerController.registerUser(firstName, lastName, email, password, username);
 
-                if (userId > 0) {
-                    User user = User.findByEmail(email);
+                if (user != null) {
                     Workspace workspace = new Workspace();
                     workspace.setName(user.getUsername() + "'s workspace");
                     workspace.setUser(user);
@@ -141,41 +132,36 @@ public class RegisterController {
 
                     transaction.commit();
 
-                    commonUtil.showSuccessMessage(Alert.AlertType.INFORMATION, "Register Successfully");
+                    CommonUtil.showSuccessMessage(Alert.AlertType.INFORMATION, "Register Successfully");
                     authUtil.signIn(user.getId());
-                    commonUtil.openMainApp(borderPane);
+                    CommonUtil.openMainApp(borderPane);
                 } else {
-                    commonUtil.showErrorAlert("Registration Error", "Failed to register.");
+                    CommonUtil.showErrorAlert("Registration Error", "Failed to register.");
                 }
             } catch (Exception e) {
                 if (transaction != null) {
                     transaction.rollback();
                 }
                 e.printStackTrace();
-                commonUtil.showErrorAlert("Oops", "An error occurred: " + e.getMessage());
+                CommonUtil.showErrorAlert("Oops", "An error occurred: " + e.getMessage());
             } finally {
                 session.close();
             }
         }
     }
 
-    public Long registerUser(String firstName, String lastName, String email, String password, String username) {
+    public User registerUser(String firstName, String lastName, String email, String password, String username) {
     try {
-        SessionFactory factory = HibernateUtil.getFactory();
-        Session session = factory.openSession();
-        Transaction transaction = session.beginTransaction();
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setEmail(email);
-        newUser.setPasswordDigest(PasswordUtil.hashPassword(password));
+        User newUser = new User(username, firstName, lastName, email, password);
 
-        Long userId = (Long) session.save(newUser);
+        String errorMessage = User.saveUser(newUser);
 
-        transaction.commit();
+        if (errorMessage != null) {
+            commonUtil.showErrorMessage("Validation Error", errorMessage);
+            return null;
+        }
 
-        return userId;
+        return newUser;
     } catch (Exception e) {
         e.printStackTrace();
         return null;

@@ -15,13 +15,8 @@ import taskmanager.utils.JwtUtil;
 public class App extends Application {
 
     private static Scene scene;
-    private CommonUtil commonUtil;
     private double width = 1024;
     private double height = 864;
-
-    public App() {
-        this.commonUtil = new CommonUtil();
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -33,15 +28,12 @@ public class App extends Application {
 
                 User currentUser = User.findById(userId);
 
-                commonUtil.showSuccessMessage(AlertType.INFORMATION, "Welcome back" + currentUser.getUsername());
+                CommonUtil.showSuccessMessage(AlertType.INFORMATION, "Welcome back" + currentUser.getUsername());
 
                 scene = new Scene(loadFXML("Workspace"), width, height);  // Load the main workspace screen
                 primaryStage.setMaximized(true);
                 primaryStage.setScene(scene);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                // If token is invalid or can't be parsed, show the login screen
-                System.out.println("Opps? ");
                 scene = new Scene(loadFXML("Login"), width, height);
                 primaryStage.setMaximized(true);
                 primaryStage.setScene(scene);
