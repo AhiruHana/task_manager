@@ -60,7 +60,7 @@ public class CommonUtil {
 
   public static void showSuccessMessage(Alert.AlertType type, String message) {
     Alert successAlert = new Alert(type);
-    successAlert.setContentText("Register Successfully");
+    successAlert.setContentText(message);
     successAlert.show();
   }
 }

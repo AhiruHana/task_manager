@@ -28,7 +28,7 @@ public class App extends Application {
 
                 User currentUser = User.findById(userId);
 
-                CommonUtil.showSuccessMessage(AlertType.INFORMATION, "Welcome back" + currentUser.getUsername());
+                CommonUtil.showSuccessMessage(AlertType.INFORMATION, "Welcome back " + currentUser.getUsername());
 
                 scene = new Scene(loadFXML("Workspace"), width, height);  // Load the main workspace screen
                 primaryStage.setMaximized(true);
