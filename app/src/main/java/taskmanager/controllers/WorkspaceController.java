@@ -116,7 +116,7 @@ public class WorkspaceController {
                         "WHERE u.username = :username");
         query.setParameter("username", username);
         List<Board> boards = query.list();
-        
+
         int colIndex = 1;
         int rowIndex = 0;
 
@@ -160,7 +160,7 @@ public class WorkspaceController {
 
         vBox.setOnMouseClicked(event -> {
             try {
-                // session.beginTransaction();
+                session.beginTransaction();
                 Query getWorkspacequery = session.createQuery(
                         "SELECT w FROM Workspace w " +
                                 "JOIN w.user u " +
@@ -174,9 +174,9 @@ public class WorkspaceController {
                 newBoard.setLastOpened(LocalDateTime.now());
                 newBoard.setWorkspace(workspace);
 
-                // Integer boardId = (Integer) session.save(newBoard);
-                System.out.println(session.save(newBoard).getClass().getName());
-                // session.getTransaction().commit();
+                Long boardId = (Long) session.save(newBoard);
+                session.getTransaction().commit();
+
 
                 double width = borderPane.getScene().getWidth();
                 double height = borderPane.getScene().getHeight();
