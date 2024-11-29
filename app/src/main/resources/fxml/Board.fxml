@@ -70,7 +70,7 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </VBox>
-                 
+
                </children>
                <padding>
                   <Insets bottom="25" top="25.0" />
@@ -84,72 +84,13 @@
             <children>
                 <HBox prefHeight="42.0" prefWidth="63.0">
                     <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Home" />
+                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Back" onAction="#goToWorkspace"/>
                     </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="63.0">
-                    <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Board" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="87.0">
-                    <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="100.0" text="Important" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="114.0">
-                    <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" text="Back Ground" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="97.0">
-                    <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="98.0" text="new row" />
-                    </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="133.0">
-               <children>
-                        <TextField prefHeight="42.0" prefWidth="200.0" text="search..." />
-               </children>
                 </HBox>
             </children>
         </HBox>
    </top>
    <top>
-    <HBox prefHeight="41.0" prefWidth="765.0" BorderPane.alignment="CENTER">
-        <children>
-            <HBox prefHeight="42.0" prefWidth="63.0">
-                <children>
-                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Home" />
-                </children>
-            </HBox>
-            <HBox prefHeight="42.0" prefWidth="63.0">
-                <children>
-                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Board" />
-                </children>
-            </HBox>
-            <HBox prefHeight="42.0" prefWidth="87.0">
-                <children>
-                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="100.0" text="Important" />
-                </children>
-            </HBox>
-            <HBox prefHeight="42.0" prefWidth="114.0">
-                <children>
-                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" text="Back Ground" />
-                </children>
-            </HBox>
-            <HBox prefHeight="42.0" prefWidth="97.0">
-                <children>
-                    <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="98.0" text="new row" />
-                </children>
-            </HBox>
-            <HBox prefHeight="42.0" prefWidth="133.0">
-           <children>
-                    <TextField prefHeight="42.0" prefWidth="200.0" text="search..." />
-           </children>
-            </HBox>
-        </children>
-    </HBox>
 </top>
    <left>
       <HBox BorderPane.alignment="CENTER">

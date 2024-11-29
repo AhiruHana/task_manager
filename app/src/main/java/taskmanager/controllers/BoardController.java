@@ -27,6 +27,7 @@ import javafx.scene.text.FontWeight;
 import taskmanager.entities.Board;
 import taskmanager.entities.Col;
 import taskmanager.entities.Workspace;
+import taskmanager.utils.CommonUtil;
 import taskmanager.utils.HibernateUtil;
 
 public class BoardController {
@@ -127,6 +128,12 @@ public class BoardController {
         } finally {
             session.close();
         }
+    }
+
+
+    @FXML
+    void goToWorkspace(ActionEvent event) {
+        CommonUtil.openMainApp(borderPane);
     }
 
     @FXML

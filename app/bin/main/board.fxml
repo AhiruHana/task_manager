@@ -20,35 +20,9 @@
             <children>
                 <HBox prefHeight="42.0" prefWidth="63.0">
                     <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Home"/>
+                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="<<<"/>
                     </children>
                 </HBox>
-                <HBox prefHeight="42.0" prefWidth="63.0">
-                    <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="70.0" text="Board"/>
-                    </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="87.0">
-                    <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="100.0" text="Important"/>
-                    </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="114.0">
-                    <children>
-                        <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" text="Back Ground"/>
-                    </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="97.0">
-                    <children>
-                        <Button onAction="#onclick_insert_colums" mnemonicParsing="false" prefHeight="42.0" prefWidth="98.0" text="new row"/>
-                    </children>
-                </HBox>
-                <HBox prefHeight="42.0" prefWidth="133.0">
-                    <children>
-                        <TextField prefHeight="42.0" prefWidth="200.0" text="search..."/>
-                    </children>
-                </HBox>
-                <Circle fill="DODGERBLUE" radius="21.0" stroke="BLACK" strokeType="INSIDE"/>
             </children>
         </HBox>
         <VBox onMouseClicked="" layoutY="42.0" prefHeight="352.0" prefWidth="140.0">
