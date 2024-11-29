@@ -1,16 +1,15 @@
 package taskmanager.controllers;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
-import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -24,6 +23,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.entities.Board;
+import taskmanager.entities.Workspace;
 import taskmanager.services.SessionManager;
 import taskmanager.utils.HibernateUtil;
 
@@ -75,7 +75,7 @@ public class WorkspaceController {
             double width = 1024;
             double height = 864;
 
-            Parent root = FXMLLoader.load(App.class.getResource("/Login.fxml"));
+            Parent root = FXMLLoader.load(App.class.getResource("/fxml/Login.fxml"));
             Scene scene = new Scene(root, width, height);
 
             Stage stage = (Stage) borderPane.getScene().getWindow();
@@ -86,12 +86,6 @@ public class WorkspaceController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private String username;
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     private String generateRandomColor() {
@@ -111,7 +105,7 @@ public class WorkspaceController {
         menuSideBar.setPrefWidth(menuSideBarWidth);
     }
 
-    public void displayProjectList() {
+    public void displayProjectList(String username) {
 
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
@@ -119,21 +113,18 @@ public class WorkspaceController {
                 "SELECT b FROM Board b " +
                         "JOIN b.workspace w " +
                         "JOIN w.user u " +
-                        "WHERE u.username = :username or email= : username");
+                        "WHERE u.username = :username");
         query.setParameter("username", username);
         List<Board> boards = query.list();
-
+        
         int colIndex = 1;
         int rowIndex = 0;
-        System.out.println(username);
+
         for (Board d : boards) {
-            int id = d.getId();
+            Long id = d.getId();
             String name = d.getName();
             String color = d.getColor();
 
-            String queryString = query.getQueryString();
-            System.out.println(queryString);
-            System.out.println(username);
             String[] colorArray = color.split(",");
 
             if (colorArray.length >= 2) {
@@ -169,19 +160,42 @@ public class WorkspaceController {
 
         vBox.setOnMouseClicked(event -> {
             try {
+                // session.beginTransaction();
+                Query getWorkspacequery = session.createQuery(
+                        "SELECT w FROM Workspace w " +
+                                "JOIN w.user u " +
+                                "WHERE u.username = :username");
+                getWorkspacequery.setParameter("username", username);
+                Workspace workspace = (Workspace) getWorkspacequery.getSingleResult();
+
+                Board newBoard = new Board();
+                newBoard.setName("Board A");
+                newBoard.setColor(generateRandomColor());
+                newBoard.setLastOpened(LocalDateTime.now());
+                newBoard.setWorkspace(workspace);
+
+                // Integer boardId = (Integer) session.save(newBoard);
+                System.out.println(session.save(newBoard).getClass().getName());
+                // session.getTransaction().commit();
+
                 double width = borderPane.getScene().getWidth();
                 double height = borderPane.getScene().getHeight();
 
-                FXMLLoader loader = new FXMLLoader(App.class.getResource("/Board.fxml"));
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Board.fxml"));
                 Parent root = loader.load();
+
+                BoardController boardController = loader.getController();
+                // boardController.displayBoardName(boardId);
 
                 Scene scene = new Scene(root, width, height);
                 Stage stage = (Stage) borderPane.getScene().getWindow();
                 stage.setScene(scene);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
+
         vBox.getChildren().add(label);
         GridPane.setConstraints(vBox, 0, 0);
         boardList.getChildren().add(vBox);
@@ -194,14 +208,14 @@ public class WorkspaceController {
         }
     }
 
-    public void diplayRecentOpened() {
+    public void diplayRecentOpened(String username) {
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
         Query query = session.createQuery(
                 "SELECT b FROM Board b " +
                         "JOIN b.workspace w " +
                         "JOIN w.user u " +
-                        "WHERE u.username = :username or email= : username ORDER BY last_opened DESC");
+                        "WHERE u.username = :username ORDER BY last_opened DESC");
         query.setParameter("username", username);
         query.setMaxResults(3);
 
@@ -210,7 +224,7 @@ public class WorkspaceController {
         int colIndex = 0;
         for (Board b : boards) {
 
-            int id = b.getId();
+            Long id = b.getId();
             String name = b.getName();
             String color = b.getColor();
 
@@ -234,11 +248,11 @@ public class WorkspaceController {
         }
     }
 
-    public void getInfoUser() {
+    public void getInfoUser(String username) {
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
         Query query = session.createQuery(
-                "select username, firstName, lastName, email from User u WHERE u.username = :username or email= : username ");
+                "select username, firstName, lastName, email from User u WHERE u.username = :username");
         query.setParameter("username", username);
 
         List<Object[]> results = query.list();
@@ -251,11 +265,11 @@ public class WorkspaceController {
 
         info_username.setText(fetchedUsername);
         info_fullname.setText("Full Name: " + fetchedFirstName + " " + fetchedLastName);
-        info_email.setText("Email : "+fetchedEmail);
+        info_email.setText("Email : " + fetchedEmail);
 
     }
 
-    public void boardVbox(VBox vBox, String gradientText, String name, List<Board> boards, int id) {
+    public void boardVbox(VBox vBox, String gradientText, String name, List<Board> boards, Long id) {
 
         vBox.setPrefHeight(70.0);
         vBox.setPrefWidth(190.0);
@@ -271,20 +285,20 @@ public class WorkspaceController {
         vBox.setOnMouseClicked(event -> {
             SessionFactory factory = HibernateUtil.getFactory();
             Session session = factory.openSession();
-            Transaction transaction = session.beginTransaction();
+            // Transaction transaction = session.beginTransaction();
 
             Board board = session.get(Board.class, id);
             board.setLastOpened(LocalDateTime.now());
 
             session.update(board);
-            transaction.commit();
+            // transaction.commit();
             session.close();
 
             try {
                 double width = borderPane.getScene().getWidth();
                 double height = borderPane.getScene().getHeight();
 
-                FXMLLoader loader = new FXMLLoader(App.class.getResource("/Board.fxml"));
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Board.fxml"));
                 Parent root = loader.load();
 
                 Scene scene = new Scene(root, width, height);

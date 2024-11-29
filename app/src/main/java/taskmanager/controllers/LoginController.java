@@ -14,13 +14,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.entities.User;
+import taskmanager.entities.Workspace;
 import taskmanager.services.AuthenticationService;
 import taskmanager.services.SessionManager;
 import taskmanager.utils.JwtUtil;
 import taskmanager.utils.CommonUtil;
+import taskmanager.utils.HibernateUtil;
 import taskmanager.exceptions.AuthenticationFailed;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.io.IOException;
 import java.net.URL;
@@ -92,18 +97,19 @@ public class LoginController {
     }
 
     private void openMainApp(String username) {
+
         try {
+
             double width = borderPane.getScene().getWidth();
             double height = borderPane.getScene().getHeight();
 
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/Workspace.fxml"));
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Workspace.fxml"));
             Parent root = loader.load();
 
             WorkspaceController workspaceController = loader.getController();
-            workspaceController.setUsername(username);
-            workspaceController.displayProjectList();
-            workspaceController.diplayRecentOpened();
-            workspaceController.getInfoUser();
+            workspaceController.displayProjectList(username);
+            workspaceController.diplayRecentOpened(username);
+            workspaceController.getInfoUser(username);
 
             Scene scene = new Scene(root, width, height);
             Stage stage = (Stage) borderPane.getScene().getWindow();

@@ -25,7 +25,7 @@ public class CommonUtil {
       double width = borderPane.getScene().getWidth();
       double height = borderPane.getScene().getHeight();
 
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/Register.fxml"));
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Register.fxml"));
       Parent root = loader.load();
 
       Scene scene = new Scene(root, width, height);
@@ -42,14 +42,13 @@ public class CommonUtil {
         double width = borderPane.getScene().getWidth();
         double height = borderPane.getScene().getHeight();
 
-        FXMLLoader loader = new FXMLLoader(App.class.getResource("/Workspace.fxml"));
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Workspace.fxml"));
         Parent root = loader.load();
 
         WorkspaceController workspaceController = loader.getController();
-        workspaceController.setUsername(username);
-        workspaceController.displayProjectList();
-        workspaceController.diplayRecentOpened();
-        workspaceController.getInfoUser();
+        workspaceController.displayProjectList(username);
+        workspaceController.diplayRecentOpened(username);
+        workspaceController.getInfoUser(username);
 
         Scene scene = new Scene(root, width, height);
         Stage stage = (Stage) borderPane.getScene().getWindow();

@@ -42,26 +42,31 @@ public class App extends Application {
                 System.out.println("Welcome back, user ID: " + userId);
 
                 scene = new Scene(loadFXML("Workspace"), width, height);  // Load the main workspace screen
+                primaryStage.setMaximized(true);
                 primaryStage.setScene(scene);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 // If token is invalid or can't be parsed, show the login screen
                 System.out.println("Opps? ");
                 scene = new Scene(loadFXML("Login"), width, height);
+                primaryStage.setMaximized(true);
                 primaryStage.setScene(scene);
             }
         } else {
             // No token means the user is not logged in, show the login screen
             scene = new Scene(loadFXML("Login"), width, height);
+            primaryStage.setMaximized(true);
             primaryStage.setScene(scene);
         }
-
+        // scene = new Scene(loadFXML("Board"), width, height);
+        // primaryStage.setMaximized(true);
+        // primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     // Helper method to load FXML files
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/" + fxml + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/fxml/"+fxml + ".fxml"));
         return fxmlLoader.load();
     }
 
