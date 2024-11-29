@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import taskmanager.App;
@@ -62,5 +63,19 @@ public class CommonUtil {
   public void signIn(Long userId) {
     String token = JwtUtil.generateToken(userId);
     SessionManager.saveSessionToken(token);
+  }
+
+  public void showErrorAlert(String title, String message) {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
+  public void showSuccessMessage(Alert.AlertType type, String message) {
+    Alert successAlert = new Alert(type);
+    successAlert.setContentText("Register Successfully");
+    successAlert.show();
   }
 }

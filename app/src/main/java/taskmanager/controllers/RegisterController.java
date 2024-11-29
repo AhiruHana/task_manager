@@ -91,15 +91,15 @@ public class RegisterController {
         String username = usernameField.getText();
 
         if (username.equals("")) {
-            showErrorAlert("Oops", "Username must be not empty!");
+            commonUtil.showErrorAlert("Oops", "Username must be not empty!");
         } else if (password.equals("")) {
-            showErrorAlert("Oops", "Password must be not empty!");
+            commonUtil.showErrorAlert("Oops", "Password must be not empty!");
         } else if (confirmPassword.equals("")) {
-            showErrorAlert("Oops", "Confirm Password must be not empty!");
+            commonUtil.showErrorAlert("Oops", "Confirm Password must be not empty!");
         } else if (email.equals("")) {
-            showErrorAlert("Oops", "Email must be not empty!");
+            commonUtil.showErrorAlert("Oops", "Email must be not empty!");
         } else if (!confirmPassword.equals(password)) {
-            showErrorAlert("Oops", "Password and confirm password do not match!");
+            commonUtil.showErrorAlert("Oops", "Password and confirm password do not match!");
         } else {
             SessionFactory factory = HibernateUtil.getFactory();
             Session session = factory.openSession();
@@ -126,74 +126,59 @@ public class RegisterController {
 
                 // Tạo user mới
                 RegisterController registerController = new RegisterController();
-                int result = registerController.registerUser(firstName, lastName, email, password, username, session);
+                Long userId = registerController.registerUser(firstName, lastName, email, password, username);
 
-                if (result > 0) {
-                    // Lấy ID của user vừa được thêm
-                    User newUser = (User) session.createQuery("FROM User u WHERE u.username = :username")
-                            .setParameter("username", username)
-                            .getSingleResult();
-
+                if (userId > 0) {
+                    User user = User.findByEmail(email);
+                    System.out.println(user);
                     // Tạo workspace mới
                     Workspace workspace = new Workspace();
-                    workspace.setName(username + "'s workspace");
-                    workspace.setUser(newUser);
+                    workspace.setName(user.getUsername() + "'s workspace");
+                    workspace.setUser(user);
 
                     session.save(workspace); // Lưu workspace
 
-                    // Commit toàn bộ giao dịch
                     transaction.commit();
 
-                    // Hiển thị thông báo thành công
-                    Alert successAlert = new Alert(Alert.AlertType.CONFIRMATION);
-                    successAlert.setContentText("Register Successfully");
-                    successAlert.show();
-
-                    User user = User.findByEmail(email);
+                    commonUtil.showSuccessMessage(Alert.AlertType.INFORMATION, "Register Successfully");
 
                     commonUtil.signIn(user.getId());
                     commonUtil.openMainApp(user.getUsername(), borderPane);
                 } else {
-                    throw new RuntimeException("Registration failed!");
+                    commonUtil.showErrorAlert("Registration Error", "Failed to register.");
                 }
             } catch (Exception e) {
                 if (transaction != null) {
-                    transaction.rollback(); // Rollback nếu có lỗi
+                    transaction.rollback();
                 }
                 e.printStackTrace();
-                showErrorAlert("Oops", "An error occurred: " + e.getMessage());
+                commonUtil.showErrorAlert("Oops", "An error occurred: " + e.getMessage());
             } finally {
-                session.close(); // Đóng session
+                session.close();
             }
         }
     }
 
-    public int registerUser(String firstName, String lastName, String email, String password, String username,
-                        Session session) {
+    public Long registerUser(String firstName, String lastName, String email, String password, String username) {
     try {
-        String sql = "INSERT INTO users (username, first_Name, last_Name, email, password_digest) " +
-                     "VALUES (:username, :firstName, :lastName, :email, :password_digest)";
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
+        Transaction transaction = session.beginTransaction();
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setEmail(email);
+        newUser.setPasswordDigest(PasswordUtil.hashPassword(password));
 
-        Query query = session.createSQLQuery(sql);
-        query.setParameter("username", username);
-        query.setParameter("firstName", firstName);
-        query.setParameter("lastName", lastName);
-        query.setParameter("email", email);
-        query.setParameter("password_digest", PasswordUtil.hashPassword(password));
+        Long userId = (Long) session.save(newUser);
 
-        return query.executeUpdate();
+        transaction.commit();
+
+        return userId;
     } catch (Exception e) {
         e.printStackTrace();
-        return 0;
+        return null;
     }
 }
-
-    private void showErrorAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
 }
