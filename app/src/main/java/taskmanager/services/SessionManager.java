@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import taskmanager.exceptions.AuthenticationFailed;
-
 public class SessionManager {
 
     private static final String SESSION_FILE = "userSession.jwt";
