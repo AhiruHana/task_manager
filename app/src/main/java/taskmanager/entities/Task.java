@@ -1,4 +1,5 @@
 package taskmanager.entities;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,7 +12,7 @@ public class Task {
   @Column(name = "name", nullable = false, length = 100)
   private String name;
 
-  @Column(name = "description", nullable = false, length = 255)
+  @Column(name = "description", nullable = true, length = 255)
   private String description;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -26,12 +27,21 @@ public class Task {
     return name;
   }
 
+  public String getDescription() {
+    return description;
+  }
+
+
   public void setId(Long id) {
     this.id = id;
   }
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public void setDescription(String description){
+    this.description= description;
   }
 
   public Col getCol() {

@@ -27,6 +27,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import taskmanager.entities.Board;
 import taskmanager.entities.Col;
+import taskmanager.entities.Task;
 import taskmanager.entities.Workspace;
 import taskmanager.utils.HibernateUtil;
 
@@ -65,6 +66,12 @@ public class BoardController {
         this.boardId = boardId;
     }
 
+    private Col col;
+
+    public void setCol(Col col) {
+        this.col = col;
+    }
+
     public void displayBoardName(Long boardId) {
 
         SessionFactory factory = HibernateUtil.getFactory();
@@ -100,7 +107,7 @@ public class BoardController {
                     boardNameTextfield.setText(board.getName());
 
                     boardNameTextfield.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-                        if (isNowFocused) { 
+                        if (isNowFocused) {
                             boardNameTextfield.selectAll();
                         }
                     });
@@ -115,7 +122,7 @@ public class BoardController {
                             boardNameTextfield.setManaged(false);
                             boardNameLabel.setVisible(true);
 
-                            updateBoardName(boardId,newName);
+                            updateBoardName(boardId, newName);
                         }
                     });
                 });
@@ -149,143 +156,187 @@ public class BoardController {
         String colName = addListTextField.getText();
 
         if (colName != null && !colName.isEmpty()) {
-            VBox colVBox = new VBox();
-            colVBox.setStyle("-fx-border-color: none; -fx-background-color: #F1F2F4;");
-            colVBox.setSpacing(10.0);
-            colVBox.setMinWidth(270);
 
-            VBox colNameVBox = new VBox();
+            SessionFactory factory = HibernateUtil.getFactory();
+            Session session = factory.openSession();
 
-            // Tao Label colname
-            Label colLabel = new Label(colName);
-            colLabel.setMaxWidth(Double.MAX_VALUE);
-            colLabel.setPadding(new Insets(6.0, 8.0, 6.0, 17.0));
-            colLabel.setFont(Font.font("System", FontWeight.BOLD, 12.0));
+            try {
 
-            colNameVBox.getChildren().add(colLabel);
+                session.beginTransaction();
+                Query getBoardquery = session.createQuery(
+                        "SELECT b FROM Board b WHERE b.id = :boardId");
 
-            // Tao Button Add a card
-            VBox addCardButtonVBox = new VBox();
-            Button addCardButton = new Button("Add a card");
-            addCardButton.setMaxWidth(Double.MAX_VALUE);
-            addCardButton.setMaxHeight(Double.MAX_VALUE);
-            addCardButton.setStyle("-fx-background-color: #F1F2F4; -fx-background-radius: 10px;");
-            addCardButton.setFont(Font.font("System", FontWeight.BOLD, 12.0));
-            addCardButton.setAlignment(Pos.TOP_LEFT);
+                getBoardquery.setParameter("boardId", boardId);
+                Board board = (Board) getBoardquery.getSingleResult();
 
-            Label icon = new Label("\uf067"); // unicode dau +
-            icon.setStyle("-fx-font-family: 'FontAwesome'; -fx-font-size: 14;");
-            addCardButton.setGraphic(icon);
+                Col newCol = new Col();
+                newCol.setName(colName);
+                newCol.setBoard(board);
+                session.save(newCol);
 
-            addCardButtonVBox.getChildren().add(addCardButton);
-            addCardButton.setPadding(new Insets(5.0, 8.0, 5.0, 8.0));
-            // VBox.setMargin(addCardButtonVBox, new Insets(0, 0, 60, 0));
+                setCol(newCol);
+                session.getTransaction().commit();
 
-            ScrollPane scrollPane = new ScrollPane();
-            scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-            scrollPane.setFitToWidth(true);
-            scrollPane.setLayoutX(10.0);
-            scrollPane.setLayoutY(10.0);
-            scrollPane.setMinWidth(270.0);
-            scrollPane.setVisible(false);
-            scrollPane.setManaged(false);
-            scrollPane.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
+                VBox colVBox = new VBox();
+                colVBox.setStyle("-fx-border-color: none; -fx-background-color: #F1F2F4;");
+                colVBox.setSpacing(10.0);
+                colVBox.setMinWidth(270);
 
-            VBox mainVBox = new VBox();
-            mainVBox.setStyle(" -fx-background-color: #F1F2F4;");
-            mainVBox.setSpacing(10.0);
-            scrollPane.setContent(mainVBox);
+                VBox colNameVBox = new VBox();
 
-            // Tao TextField de nhap ten card
-            TextField titleTextField = new TextField();
-            titleTextField.setPromptText("Enter a title");
-            titleTextField.setStyle("-fx-background-radius: 10; -fx-border-radius: 10;");
-            titleTextField.setPadding(new Insets(7.0, 8.0, 7.0, 8.0));
+                // Tao Label colname
+                Label colLabel = new Label(colName);
+                colLabel.setMaxWidth(Double.MAX_VALUE);
+                colLabel.setPadding(new Insets(6.0, 8.0, 6.0, 17.0));
+                colLabel.setFont(Font.font("System", FontWeight.BOLD, 12.0));
 
-            titleTextField.setVisible(false);
-            titleTextField.setManaged(false);
+                colNameVBox.getChildren().add(colLabel);
 
-            // Tao HBox chua button Add List va Close
-            Button addListButton = new Button("Add card");
-            addListButton.setStyle("-fx-background-color: #0055CC;");
-            addListButton.setTextFill(Color.WHITE);
-            addListButton.setFont(Font.font("System", FontWeight.BOLD, 12.0));
+                // Tao Button Add a card
+                VBox addCardButtonVBox = new VBox();
+                Button addCardButton = new Button("Add a card");
+                addCardButton.setMaxWidth(Double.MAX_VALUE);
+                addCardButton.setMaxHeight(Double.MAX_VALUE);
+                addCardButton.setStyle("-fx-background-color: #F1F2F4; -fx-background-radius: 10px;");
+                addCardButton.setFont(Font.font("System", FontWeight.BOLD, 12.0));
+                addCardButton.setAlignment(Pos.TOP_LEFT);
 
-            Button closeButton = new Button();
-            closeButton.setStyle("-fx-background-color: #F1F2F4;");
-            Label closeLabel = new Label("\u2715"); // Unicode dau "✕"
-            closeLabel.setFont(Font.font(17.0));
-            closeLabel.setTextFill(Color.BLACK);
-            closeButton.setGraphic(closeLabel);
+                Label icon = new Label("\uf067"); // unicode dau +
+                icon.setStyle("-fx-font-family: 'FontAwesome'; -fx-font-size: 14;");
+                addCardButton.setGraphic(icon);
 
-            HBox buttonBox = new HBox(addListButton, closeButton);
-            buttonBox.setSpacing(10.0);
-            buttonBox.setVisible(false);
-            buttonBox.setManaged(false);
+                addCardButtonVBox.getChildren().add(addCardButton);
+                addCardButton.setPadding(new Insets(5.0, 8.0, 5.0, 8.0));
+                // VBox.setMargin(addCardButtonVBox, new Insets(0, 0, 60, 0));
 
-            // gan cac thanh phan vao vbox
-            VBox inputVBox = new VBox(titleTextField, buttonBox);
-            inputVBox.setSpacing(10.0);
-            VBox.setMargin(inputVBox, new Insets(0, 10.0, 0, 10.0));
+                ScrollPane scrollPane = new ScrollPane();
+                scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                scrollPane.setFitToWidth(true);
+                scrollPane.setLayoutX(10.0);
+                scrollPane.setLayoutY(10.0);
+                scrollPane.setMinWidth(270.0);
+                scrollPane.setVisible(false);
+                scrollPane.setManaged(false);
+                scrollPane.setStyle("-fx-border-color: transparent; -fx-background-color: transparent;");
 
-            addCardButton.setOnAction(e -> {
-                titleTextField.setVisible(true);
-                titleTextField.setManaged(true);
-                addCardButton.setVisible(false);
-                addCardButton.setManaged(false);
-                buttonBox.setVisible(true);
-                buttonBox.setManaged(true);
+                VBox mainVBox = new VBox();
+                mainVBox.setStyle(" -fx-background-color: #F1F2F4;");
+                mainVBox.setSpacing(10.0);
+                scrollPane.setContent(mainVBox);
 
-                VBox.setMargin(addCardButtonVBox, new Insets(0, 0, 0, 0));
+                // Tao TextField de nhap ten card
+                TextField titleTextField = new TextField();
+                titleTextField.setPromptText("Enter a title");
+                titleTextField.setStyle("-fx-background-radius: 10; -fx-border-radius: 10;");
+                titleTextField.setPadding(new Insets(7.0, 8.0, 7.0, 8.0));
 
-            });
-
-            closeButton.setOnAction(e -> {
-                addCardButton.setVisible(true);
-                titleTextField.setManaged(false);
                 titleTextField.setVisible(false);
+                titleTextField.setManaged(false);
+
+                // Tao HBox chua button Add List va Close
+                Button addListButton = new Button("Add card");
+                addListButton.setStyle("-fx-background-color: #0055CC;");
+                addListButton.setTextFill(Color.WHITE);
+                addListButton.setFont(Font.font("System", FontWeight.BOLD, 12.0));
+
+                Button closeButton = new Button();
+                closeButton.setStyle("-fx-background-color: #F1F2F4;");
+                Label closeLabel = new Label("\u2715"); // Unicode dau "✕"
+                closeLabel.setFont(Font.font(17.0));
+                closeLabel.setTextFill(Color.BLACK);
+                closeButton.setGraphic(closeLabel);
+
+                HBox buttonBox = new HBox(addListButton, closeButton);
+                buttonBox.setSpacing(10.0);
                 buttonBox.setVisible(false);
                 buttonBox.setManaged(false);
 
-            });
+                // gan cac thanh phan vao vbox
+                VBox inputVBox = new VBox(titleTextField, buttonBox);
+                inputVBox.setSpacing(10.0);
+                VBox.setMargin(inputVBox, new Insets(0, 10.0, 0, 10.0));
 
-            addListButton.setOnAction(e -> {
-                String title = titleTextField.getText();
+                addCardButton.setOnAction(e -> {
+                    titleTextField.setVisible(true);
+                    titleTextField.setManaged(true);
+                    addCardButton.setVisible(false);
+                    addCardButton.setManaged(false);
+                    buttonBox.setVisible(true);
+                    buttonBox.setManaged(true);
 
-                if (title != null && !title.isEmpty()) {
-                    // Tao Label cho card
-                    Label cardLabel = new Label(title);
-                    cardLabel.setMaxWidth(Double.MAX_VALUE);
-                    cardLabel.setStyle("-fx-background-color: white; -fx-background-radius: 10px;");
-                    cardLabel.setPadding(new Insets(7.0, 8.0, 7.0, 8.0));
-                    VBox cardVBox = new VBox(cardLabel);
-                    VBox.setMargin(cardVBox, new Insets(5.0, 8.0, 0, 8.0));
+                    VBox.setMargin(addCardButtonVBox, new Insets(0, 0, 0, 0));
 
-                    mainVBox.getChildren().addAll(cardVBox);
-                    if (!mainVBox.getChildren().isEmpty()) {
-                        scrollPane.setVisible(true);
-                        scrollPane.setManaged(true);
+                });
+
+                closeButton.setOnAction(e -> {
+                    addCardButton.setVisible(true);
+                    titleTextField.setManaged(false);
+                    titleTextField.setVisible(false);
+                    buttonBox.setVisible(false);
+                    buttonBox.setManaged(false);
+
+                });
+
+                addListButton.setOnAction(e -> {
+                    String title = titleTextField.getText();
+
+                    if (title != null && !title.isEmpty()) {
+
+                        // SessionFactory factory = HibernateUtil.getFactory();
+                        // Session session = factory.openSession();
+
+                        // session.beginTransaction();
+
+                        try {
+
+                            session.beginTransaction();
+
+                            Task newTask = new Task();
+                            newTask.setName(title);
+                            newTask.setCol(col);
+                            // newTask.setDescription("");
+                            session.save(newTask);
+
+                            session.getTransaction().commit();
+
+                            // Tao Label cho card
+                            Label cardLabel = new Label(title);
+                            cardLabel.setMaxWidth(Double.MAX_VALUE);
+                            cardLabel.setStyle("-fx-background-color: white; -fx-background-radius: 10px;");
+                            cardLabel.setPadding(new Insets(7.0, 8.0, 7.0, 8.0));
+                            VBox cardVBox = new VBox(cardLabel);
+                            VBox.setMargin(cardVBox, new Insets(5.0, 8.0, 0, 8.0));
+
+                            mainVBox.getChildren().addAll(cardVBox);
+                            if (!mainVBox.getChildren().isEmpty()) {
+                                scrollPane.setVisible(true);
+                                scrollPane.setManaged(true);
+                            }
+                        } catch (Exception err) {
+                            err.printStackTrace();
+                        }
+
                     }
-                }
 
-                buttonBox.setVisible(false);
-                buttonBox.setManaged(false);
-                addCardButton.setVisible(true);
-                titleTextField.clear();
-                titleTextField.setVisible(false);
-                titleTextField.setManaged(false);
+                    buttonBox.setVisible(false);
+                    buttonBox.setManaged(false);
+                    addCardButton.setVisible(true);
+                    titleTextField.clear();
+                    titleTextField.setVisible(false);
+                    titleTextField.setManaged(false);
 
-                VBox.setMargin(addCardButtonVBox, new Insets(0, 0, 30, 0));
-            });
+                    VBox.setMargin(addCardButtonVBox, new Insets(0, 0, 30, 0));
+                });
 
-            colVBox.getChildren().addAll(colNameVBox, scrollPane, addCardButtonVBox, inputVBox);
+                colVBox.getChildren().addAll(colNameVBox, scrollPane, addCardButtonVBox, inputVBox);
 
-            int addListIndex = main.getChildren().indexOf(addListVbox);
+                int addListIndex = main.getChildren().indexOf(addListVbox);
 
-            main.getChildren().add(addListIndex, colVBox);
-            main.setMargin(colVBox, new Insets(0, 0, 0, 10));
-
-            createCol(boardId, colName);
+                main.getChildren().add(addListIndex, colVBox);
+                main.setMargin(colVBox, new Insets(0, 0, 0, 10));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         addListTextField.clear();
@@ -295,43 +346,20 @@ public class BoardController {
 
     }
 
-    public void createCol(Long boardId, String name) {
-        try {
-            SessionFactory factory = HibernateUtil.getFactory();
-            Session session = factory.openSession();
-
-            session.beginTransaction();
-            Query getBoardquery = session.createQuery(
-                    "SELECT b FROM Board b WHERE b.id = :boardId");
-
-            getBoardquery.setParameter("boardId", boardId);
-            Board board = (Board) getBoardquery.getSingleResult();
-
-            Col newCol = new Col();
-            newCol.setName(name);
-            newCol.setBoard(board);
-            session.save(newCol);
-
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private void updateBoardName(Long boardId, String newName) {
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
         Transaction transaction = null;
-    
+
         try {
             transaction = session.beginTransaction();
-    
+
             Board board = session.get(Board.class, boardId);
             if (board != null) {
                 board.setName(newName);
                 session.update(board);
             }
-    
+
             transaction.commit();
             System.out.println("Board name updated successfully!");
         } catch (Exception e) {
@@ -344,7 +372,4 @@ public class BoardController {
         }
     }
 
-    public void createTask(Col col, String name){
-
-    }
 }
