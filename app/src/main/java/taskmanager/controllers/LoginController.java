@@ -2,32 +2,15 @@ package taskmanager.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import taskmanager.App;
-import taskmanager.entities.User;
-import taskmanager.entities.Workspace;
 import taskmanager.services.AuthenticationService;
-import taskmanager.services.SessionManager;
-import taskmanager.utils.JwtUtil;
 import taskmanager.utils.CommonUtil;
-import taskmanager.utils.HibernateUtil;
 import taskmanager.exceptions.AuthenticationFailed;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import java.io.IOException;
 import java.net.URL;
 
 public class LoginController {

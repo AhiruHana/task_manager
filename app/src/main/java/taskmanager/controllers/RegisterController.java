@@ -72,7 +72,7 @@ public class RegisterController {
 
     public void goToLogIn(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) Login.getScene().getWindow();
