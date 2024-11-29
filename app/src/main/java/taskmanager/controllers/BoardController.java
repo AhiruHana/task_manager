@@ -292,12 +292,6 @@ public class BoardController {
                     String title = titleTextField.getText();
 
                     if (title != null && !title.isEmpty()) {
-
-                        // SessionFactory factory = HibernateUtil.getFactory();
-                        // Session session = factory.openSession();
-
-                        // session.beginTransaction();
-
                         try {
 
                             session.beginTransaction();
