@@ -82,7 +82,6 @@ public class LoginController {
 
             Long userId = (Long) claims.get("userId");
             String token = JwtUtil.generateToken(userId);
-            System.out.println(token);
             SessionManager.saveSessionToken(token);
 
             openMainApp(username);

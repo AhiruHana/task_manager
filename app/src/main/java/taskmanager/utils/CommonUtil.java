@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.controllers.WorkspaceController;
+import taskmanager.services.SessionManager;
 
 public class CommonUtil {
   public void showErrorMessage(String title, String message) {
@@ -56,5 +57,10 @@ public class CommonUtil {
     } catch (IOException e) {
         e.printStackTrace();
     }
+  }
+
+  public void signIn(Long userId) {
+    String token = JwtUtil.generateToken(userId);
+    SessionManager.saveSessionToken(token);
   }
 }

@@ -1,6 +1,7 @@
 package taskmanager.controllers;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,6 +24,7 @@ import org.hibernate.query.Query;
 import taskmanager.App;
 import taskmanager.entities.User;
 import taskmanager.entities.Workspace;
+import taskmanager.utils.CommonUtil;
 import taskmanager.utils.HibernateUtil;
 import taskmanager.utils.PasswordUtil;
 
@@ -55,8 +57,17 @@ public class RegisterController {
     @FXML
     private TextField usernameField;
 
-    @FXML
-    void goToLogIn(ActionEvent event) {
+    private CommonUtil commonUtil;
+
+    public void initialize() {
+        try {
+            commonUtil = new CommonUtil();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void goToLogIn(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
             Parent root = loader.load();
@@ -71,7 +82,7 @@ public class RegisterController {
         }
     }
 
-    void signUp(ActionEvent event) {
+    public void signUp(ActionEvent event) {
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String email = emailField.getText();
@@ -138,19 +149,10 @@ public class RegisterController {
                     successAlert.setContentText("Register Successfully");
                     successAlert.show();
 
-                    // Chuyển sang giao diện Login
-                    try {
-                        double width = 1024;
-                        double height = 864;
+                    User user = User.findByEmail(email);
 
-                        Parent root = FXMLLoader.load(App.class.getResource("/fxml/Login.fxml"));
-                        Scene scene = new Scene(root, width, height);
-
-                        Stage stage = (Stage) borderPane.getScene().getWindow();
-                        stage.setScene(scene);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    commonUtil.signIn(user.getId());
+                    commonUtil.openMainApp(user.getUsername(), borderPane);
                 } else {
                     throw new RuntimeException("Registration failed!");
                 }
