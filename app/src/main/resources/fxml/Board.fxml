@@ -13,7 +13,7 @@
 
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="taskmanager.controllers.BoardController">
    <center>
-        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" style="-fx-background: pink;" vbarPolicy="NEVER">
+        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" vbarPolicy="NEVER">
          <content>
             <HBox fx:id="main">
                <children>

@@ -1,10 +1,12 @@
 package taskmanager.controllers;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import javafx.event.ActionEvent;
@@ -24,12 +26,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import taskmanager.entities.Board;
+import taskmanager.entities.Col;
+import taskmanager.entities.Workspace;
 import taskmanager.utils.HibernateUtil;
 
 public class BoardController {
 
     @FXML
     private BorderPane borderPane;
+
+    @FXML
+    private ScrollPane scrollPane;
 
     @FXML
     private HBox main;
@@ -52,25 +59,48 @@ public class BoardController {
     @FXML
     private TextField boardNameTextfield;
 
+    private Long boardId;
+
+    public void setId(Long boardId) {
+        this.boardId = boardId;
+    }
+
     public void displayBoardName(Long boardId) {
 
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
 
         try {
-            
-            Board board = session.get(Board.class, boardId); 
-    
+
+            Board board = session.get(Board.class, boardId);
+
             if (board != null) {
-                boardNameLabel.setText(board.getName());  
-                boardNameLabel.setOnMouseClicked(event ->{
+                String color = board.getColor();
+
+                String[] colorArray = color.split(",");
+
+                if (colorArray.length >= 2) {
+                    String color1 = colorArray[0].trim();
+                    String color2 = colorArray[1].trim();
+
+                    String gradientText = String.format(
+                            "-fx-background: linear-gradient(to right, %s, %s)",
+                            color1, color2);
+
+                    scrollPane.setStyle(gradientText);
+                }
+
+                boardNameLabel.setText(board.getName());
+                boardNameLabel.setOnMouseClicked(event -> {
 
                     boardNameLabel.setVisible(false);
                     boardNameLabel.setManaged(false);
                     boardNameTextfield.setVisible(true);
 
+                    boardNameTextfield.setText(board.getName());
+
                     boardNameTextfield.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-                        if (isNowFocused) {
+                        if (isNowFocused) { 
                             boardNameTextfield.selectAll();
                         }
                     });
@@ -84,21 +114,19 @@ public class BoardController {
                             boardNameTextfield.setVisible(false);
                             boardNameTextfield.setManaged(false);
                             boardNameLabel.setVisible(true);
-                            
-                            board.setName(newName);
-                            session.beginTransaction();
-                            session.update(board);
-                            session.getTransaction().commit();
+
+                            updateBoardName(boardId,newName);
                         }
                     });
-               });
+                });
+
             } else {
                 System.out.println("No board found with ID: " + boardId);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close(); 
+            session.close();
         }
     }
 
@@ -256,6 +284,8 @@ public class BoardController {
 
             main.getChildren().add(addListIndex, colVBox);
             main.setMargin(colVBox, new Insets(0, 0, 0, 10));
+
+            createCol(boardId, colName);
         }
 
         addListTextField.clear();
@@ -265,4 +295,56 @@ public class BoardController {
 
     }
 
+    public void createCol(Long boardId, String name) {
+        try {
+            SessionFactory factory = HibernateUtil.getFactory();
+            Session session = factory.openSession();
+
+            session.beginTransaction();
+            Query getBoardquery = session.createQuery(
+                    "SELECT b FROM Board b WHERE b.id = :boardId");
+
+            getBoardquery.setParameter("boardId", boardId);
+            Board board = (Board) getBoardquery.getSingleResult();
+
+            Col newCol = new Col();
+            newCol.setName(name);
+            newCol.setBoard(board);
+            session.save(newCol);
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateBoardName(Long boardId, String newName) {
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
+        Transaction transaction = null;
+    
+        try {
+            transaction = session.beginTransaction();
+    
+            Board board = session.get(Board.class, boardId);
+            if (board != null) {
+                board.setName(newName);
+                session.update(board);
+            }
+    
+            transaction.commit();
+            System.out.println("Board name updated successfully!");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+
+    public void createTask(Col col, String name){
+
+    }
 }
