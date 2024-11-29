@@ -39,13 +39,10 @@ public class CommonUtil {
 
   public void openMainApp(BorderPane borderPane) {
     try {
-        double width = borderPane.getScene().getWidth();
-        double height = borderPane.getScene().getHeight();
-
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Workspace.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, width, height);
+        Scene scene = new Scene(root, 1024, 864);
         Stage stage = (Stage) borderPane.getScene().getWindow();
         stage.setScene(scene);
     } catch (IOException e) {

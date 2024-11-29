@@ -5,7 +5,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import taskmanager.entities.User;
 import taskmanager.services.SessionManager;
 import taskmanager.utils.CommonUtil;
 import taskmanager.utils.JwtUtil;
@@ -23,23 +25,15 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("Start");
-        String token = SessionManager.loadSessionToken();  // Get the token (from the database or session)
-        System.out.println("Got the token: " + token);
+        String token = SessionManager.loadSessionToken();
 
         if (token != null) {
             try {
+                long userId = JwtUtil.parseToken(token);
 
-                long userId = JwtUtil.parseToken(token);  // Parse the token to get the userId
-                System.out.println(userId);
-                // TODO: Handle if userId == 0
-                // Optionally, use the userId to fetch more details (like username) from the database
-                // For example:
-                // User user = getUserFromDatabase(userId);
-                // String username = user.getUsername();
+                User currentUser = User.findById(userId);
 
-                // If the token is valid and we have a user ID, proceed
-                System.out.println("Welcome back, user ID: " + userId);
+                commonUtil.showSuccessMessage(AlertType.INFORMATION, "Welcome back" + currentUser.getUsername());
 
                 scene = new Scene(loadFXML("Workspace"), width, height);  // Load the main workspace screen
                 primaryStage.setMaximized(true);
