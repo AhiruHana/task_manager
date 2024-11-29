@@ -90,10 +90,18 @@ public class WorkspaceController {
 
     private String generateRandomColor() {
         Random random = new Random();
-        int r = random.nextInt(256);
-        int g = random.nextInt(256);
-        int b = random.nextInt(256);
-        return String.format("#%02x%02x%02x", r, g, b);
+
+        int r1 = random.nextInt(256);
+        int g1 = random.nextInt(256);
+        int b1 = random.nextInt(256);
+        String color1 = String.format("#%02x%02x%02x", r1, g1, b1);
+
+        int r2 = random.nextInt(256);
+        int g2 = random.nextInt(256);
+        int b2 = random.nextInt(256);
+        String color2 = String.format("#%02x%02x%02x", r2, g2, b2);
+
+        return color1 + ", " + color2;
     }
 
     public void responseWidth(double totalWidth) {
@@ -177,7 +185,6 @@ public class WorkspaceController {
                 Long boardId = (Long) session.save(newBoard);
                 session.getTransaction().commit();
 
-
                 double width = borderPane.getScene().getWidth();
                 double height = borderPane.getScene().getHeight();
 
@@ -185,7 +192,7 @@ public class WorkspaceController {
                 Parent root = loader.load();
 
                 BoardController boardController = loader.getController();
-                // boardController.displayBoardName(boardId);
+                boardController.displayBoardName(boardId);
 
                 Scene scene = new Scene(root, width, height);
                 Stage stage = (Stage) borderPane.getScene().getWindow();

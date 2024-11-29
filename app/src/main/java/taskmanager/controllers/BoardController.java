@@ -52,7 +52,7 @@ public class BoardController {
     @FXML
     private TextField boardNameTextfield;
 
-    public void displayBoardName(int boardId) {
+    public void displayBoardName(Long boardId) {
 
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
