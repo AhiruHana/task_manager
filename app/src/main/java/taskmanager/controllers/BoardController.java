@@ -18,6 +18,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -159,6 +162,8 @@ public class BoardController {
             colVBox.setStyle("-fx-border-color: none; -fx-background-color: #F1F2F4;");
             colVBox.setSpacing(10.0);
             colVBox.setMinWidth(270);
+
+            setDragAndDropEvents(colVBox);
 
             VBox colNameVBox = new VBox();
 
@@ -322,6 +327,30 @@ public class BoardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setDragAndDropEvents(VBox column) {
+        column.setOnDragOver((DragEvent dragEvent) -> {
+            if (dragEvent.getGestureSource() != column && dragEvent.getDragboard().hasString()) {
+                dragEvent.acceptTransferModes(TransferMode.MOVE);
+            }
+            dragEvent.consume();
+        });
+
+        column.setOnDragDropped(event -> {
+            Dragboard dragboard = event.getDragboard();
+            boolean success = false;
+
+            if (dragboard.hasString()) {
+                Label droppedCard = new Label(dragboard.getString());
+                droppedCard.setStyle("-fx-background-color: lightgreen; -fx-padding: 10;");
+                column.getChildren().add(droppedCard);
+
+                success = true;
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
     }
 
     private void updateBoardName(Long boardId, String newName) {
