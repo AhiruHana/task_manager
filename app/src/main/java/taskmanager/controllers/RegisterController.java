@@ -1,7 +1,6 @@
 package taskmanager.controllers;
 
 import java.io.IOException;
-import java.net.URL;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,7 +19,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 
 import taskmanager.App;
 import taskmanager.entities.User;

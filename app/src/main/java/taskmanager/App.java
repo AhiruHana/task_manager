@@ -58,9 +58,6 @@ public class App extends Application {
             primaryStage.setMaximized(true);
             primaryStage.setScene(scene);
         }
-        // scene = new Scene(loadFXML("Board"), width, height);
-        // primaryStage.setMaximized(true);
-        // primaryStage.setScene(scene);
         primaryStage.show();
     }
 

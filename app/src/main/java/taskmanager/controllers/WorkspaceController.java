@@ -1,7 +1,6 @@
 package taskmanager.controllers;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +29,6 @@ import taskmanager.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 public class WorkspaceController {
     @FXML
