@@ -21,7 +21,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Optionally, you could add a method to parse and validate the token
     public static long parseToken(String token) {
         try {
             return Long.parseLong(Jwts.parser()

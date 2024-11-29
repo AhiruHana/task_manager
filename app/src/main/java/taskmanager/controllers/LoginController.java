@@ -74,17 +74,9 @@ public class LoginController {
         String password = passwordField.getText();
 
         try {
-            // TODO: Use this user to get workspaces
-            User user = authService.authenticate(username, password);
+            authService.authenticate(username, password);
 
-            Map<String, Object> claims = new HashMap<>();
-            claims.put("username", username);
-
-            Long userId = (Long) claims.get("userId");
-            String token = JwtUtil.generateToken(userId);
-            SessionManager.saveSessionToken(token);
-
-            openMainApp(username);
+            commonUtil.openMainApp(borderPane);
         } catch (AuthenticationFailed e) {
             commonUtil.showErrorMessage("Login failed!", "Invalid username or password");
         }
@@ -93,28 +85,5 @@ public class LoginController {
     @FXML
     public void GoToSignUp(ActionEvent event) {
         commonUtil.newScene(borderPane);
-    }
-
-    private void openMainApp(String username) {
-
-        try {
-
-            double width = borderPane.getScene().getWidth();
-            double height = borderPane.getScene().getHeight();
-
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Workspace.fxml"));
-            Parent root = loader.load();
-
-            WorkspaceController workspaceController = loader.getController();
-            workspaceController.displayProjectList(username);
-            workspaceController.diplayRecentOpened(username);
-            workspaceController.getInfoUser(username);
-
-            Scene scene = new Scene(root, width, height);
-            Stage stage = (Stage) borderPane.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

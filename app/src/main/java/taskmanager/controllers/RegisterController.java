@@ -130,20 +130,17 @@ public class RegisterController {
 
                 if (userId > 0) {
                     User user = User.findByEmail(email);
-                    System.out.println(user);
-                    // Tạo workspace mới
                     Workspace workspace = new Workspace();
                     workspace.setName(user.getUsername() + "'s workspace");
                     workspace.setUser(user);
 
-                    session.save(workspace); // Lưu workspace
+                    session.save(workspace);
 
                     transaction.commit();
 
                     commonUtil.showSuccessMessage(Alert.AlertType.INFORMATION, "Register Successfully");
-
                     commonUtil.signIn(user.getId());
-                    commonUtil.openMainApp(user.getUsername(), borderPane);
+                    commonUtil.openMainApp(borderPane);
                 } else {
                     commonUtil.showErrorAlert("Registration Error", "Failed to register.");
                 }

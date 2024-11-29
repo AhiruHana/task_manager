@@ -39,6 +39,8 @@ public class AuthenticationService {
             // Generate the JWT token
             String jwtToken = JwtUtil.generateToken(user.getId());
 
+            SessionManager.saveSessionToken(jwtToken);
+
             // Store the JWT token in the database
             JwtToken jwtTokenEntity = new JwtToken();
             jwtTokenEntity.setUserId(user.getId());

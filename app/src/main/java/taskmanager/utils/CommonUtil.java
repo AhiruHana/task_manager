@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.controllers.WorkspaceController;
+import taskmanager.entities.User;
 import taskmanager.services.SessionManager;
 
 public class CommonUtil {
@@ -39,18 +40,13 @@ public class CommonUtil {
     }
   }
 
-  public void openMainApp(String username, BorderPane borderPane) {
+  public void openMainApp(BorderPane borderPane) {
     try {
         double width = borderPane.getScene().getWidth();
         double height = borderPane.getScene().getHeight();
 
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Workspace.fxml"));
         Parent root = loader.load();
-
-        WorkspaceController workspaceController = loader.getController();
-        workspaceController.displayProjectList(username);
-        workspaceController.diplayRecentOpened(username);
-        workspaceController.getInfoUser(username);
 
         Scene scene = new Scene(root, width, height);
         Stage stage = (Stage) borderPane.getScene().getWindow();
@@ -77,5 +73,13 @@ public class CommonUtil {
     Alert successAlert = new Alert(type);
     successAlert.setContentText("Register Successfully");
     successAlert.show();
+  }
+
+  public User currentUser() {
+    String token = SessionManager.loadSessionToken();
+
+    Long userId = JwtUtil.parseToken(token);
+
+    return User.findById(userId);
   }
 }

@@ -22,8 +22,10 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import taskmanager.App;
 import taskmanager.entities.Board;
+import taskmanager.entities.User;
 import taskmanager.entities.Workspace;
 import taskmanager.services.SessionManager;
+import taskmanager.utils.CommonUtil;
 import taskmanager.utils.HibernateUtil;
 
 import org.hibernate.Session;
@@ -54,6 +56,9 @@ public class WorkspaceController {
     @FXML
     private Button logout;
 
+    private CommonUtil commonUtil;
+    private User currentUser;
+
     public void initialize() {
         try {
             URL cssUrl = getClass().getResource("/css/Workspace.css");
@@ -62,6 +67,13 @@ public class WorkspaceController {
             } else {
                 System.out.println("CSS file not found!");
             }
+
+            this.commonUtil = new CommonUtil();
+
+            this.currentUser = commonUtil.currentUser();
+            displayProjectList();
+            displayRecentOpened();
+            getInfoUser();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -111,8 +123,8 @@ public class WorkspaceController {
         menuSideBar.setPrefWidth(menuSideBarWidth);
     }
 
-    public void displayProjectList(String username) {
-
+    public void displayProjectList() {
+        String username = currentUser.getUsername();
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
         Query query = session.createQuery(
@@ -213,7 +225,8 @@ public class WorkspaceController {
         }
     }
 
-    public void diplayRecentOpened(String username) {
+    public void displayRecentOpened() {
+        String username = currentUser.getUsername();
         SessionFactory factory = HibernateUtil.getFactory();
         Session session = factory.openSession();
         Query query = session.createQuery(
@@ -253,25 +266,10 @@ public class WorkspaceController {
         }
     }
 
-    public void getInfoUser(String username) {
-        SessionFactory factory = HibernateUtil.getFactory();
-        Session session = factory.openSession();
-        Query query = session.createQuery(
-                "select username, firstName, lastName, email from User u WHERE u.username = :username");
-        query.setParameter("username", username);
-
-        List<Object[]> results = query.list();
-
-        Object[] row = results.get(0);
-        String fetchedUsername = (String) row[0];
-        String fetchedFirstName = (String) row[1];
-        String fetchedLastName = (String) row[2];
-        String fetchedEmail = (String) row[3];
-
-        info_username.setText(fetchedUsername);
-        info_fullname.setText("Full Name: " + fetchedFirstName + " " + fetchedLastName);
-        info_email.setText("Email : " + fetchedEmail);
-
+    public void getInfoUser() {
+        info_username.setText(currentUser.getUsername());
+        info_fullname.setText("Full Name: " + currentUser.getFirstName() + " " + currentUser.getLastName());
+        info_email.setText("Email : " + currentUser.getEmail());
     }
 
     public void boardVbox(VBox vBox, String gradientText, String name, List<Board> boards, Long id) {
@@ -284,6 +282,7 @@ public class WorkspaceController {
         label.setFont(new Font("System Italic", 12.0));
         label.setStyle("-fx-text-fill: white;");
         VBox.setMargin(label, new Insets(10.0));
+        getInfoUser();
 
         vBox.getChildren().add(label);
 

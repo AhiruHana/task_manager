@@ -81,6 +81,14 @@ public class User {
   }
 
   public static User findByEmail(String email) {
+    return findByField("email", email);
+}
+
+  public static User findById(Long id) {
+      return findByField("id", id);
+  }
+
+  private static <T> User findByField(String field, T value) {
     try {
       SessionFactory sessionFactory = HibernateUtil.getFactory();
       Session session = sessionFactory.openSession();
@@ -89,7 +97,7 @@ public class User {
       CriteriaBuilder builder = session.getCriteriaBuilder();
       CriteriaQuery<User> criteria = builder.createQuery(User.class);
       Root<User> root = criteria.from(User.class);
-      criteria.select(root).where(builder.equal(root.get("email"), email));
+      criteria.select(root).where(builder.equal(root.get(field), value));
 
       User result = session.createQuery(criteria).uniqueResult();
 
