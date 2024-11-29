@@ -21,25 +21,11 @@
    <top>
       <MenuBar prefHeight="43.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <menus>
-            <Menu mnemonicParsing="false" text="Edit">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Delete" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Help">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="About" />
-               </items>
-            </Menu>
             <Menu mnemonicParsing="false" text="file">
                <items>
+                  <MenuItem mnemonicParsing="false" text="Logout" />
                   <MenuItem mnemonicParsing="false" text="Close" />
                </items>
-            </Menu>
-            <Menu mnemonicParsing="false">
-               <graphic>
-                  <TextField focusTraversable="false" />
-               </graphic>
             </Menu>
          </menus>
       </MenuBar>
@@ -98,7 +84,7 @@
                   <ColumnConstraints hgrow="SOMETIMES"  />
                   <ColumnConstraints hgrow="SOMETIMES"/>
                </columnConstraints>
-               
+
                <VBox.margin>
                   <Insets left="20.0" right="20.0" top="15.0" />
                </VBox.margin>

@@ -18,7 +18,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -29,6 +31,7 @@ import taskmanager.entities.Board;
 import taskmanager.entities.Col;
 import taskmanager.entities.Task;
 import taskmanager.entities.Workspace;
+import taskmanager.utils.CommonUtil;
 import taskmanager.utils.HibernateUtil;
 
 public class BoardController {
@@ -62,8 +65,8 @@ public class BoardController {
 
     private Long boardId;
 
-    public void setId(Long boardId) {
-        this.boardId = boardId;
+    public void setId(Long id) {
+        this.boardId = id;
     }
 
     private Col col;
@@ -137,6 +140,12 @@ public class BoardController {
         }
     }
 
+
+    @FXML
+    void goToWorkspace(ActionEvent event) {
+        CommonUtil.openMainApp(borderPane);
+    }
+
     @FXML
     private void addCol(ActionEvent event) {
         addColButton.setVisible(false);
@@ -181,6 +190,8 @@ public class BoardController {
                 colVBox.setStyle("-fx-border-color: none; -fx-background-color: #F1F2F4;");
                 colVBox.setSpacing(10.0);
                 colVBox.setMinWidth(270);
+
+                setDragAndDropEvents(colVBox);
 
                 VBox colNameVBox = new VBox();
 
@@ -344,6 +355,53 @@ public class BoardController {
         addColTextField.setManaged(false);
         addColButton.setVisible(true);
 
+    }
+
+    public void createCol(Long boardId, String name) {
+        try {
+            SessionFactory factory = HibernateUtil.getFactory();
+            Session session = factory.openSession();
+
+            session.beginTransaction();
+            Query getBoardquery = session.createQuery(
+                    "SELECT b FROM Board b WHERE b.id = :boardId");
+
+            getBoardquery.setParameter("boardId", boardId);
+            Board board = (Board) getBoardquery.getSingleResult();
+
+            Col newCol = new Col();
+            newCol.setName(name);
+            newCol.setBoard(board);
+            session.save(newCol);
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setDragAndDropEvents(VBox column) {
+        column.setOnDragOver((DragEvent dragEvent) -> {
+            if (dragEvent.getGestureSource() != column && dragEvent.getDragboard().hasString()) {
+                dragEvent.acceptTransferModes(TransferMode.MOVE);
+            }
+            dragEvent.consume();
+        });
+
+        column.setOnDragDropped(event -> {
+            Dragboard dragboard = event.getDragboard();
+            boolean success = false;
+
+            if (dragboard.hasString()) {
+                Label droppedCard = new Label(dragboard.getString());
+                droppedCard.setStyle("-fx-background-color: lightgreen; -fx-padding: 10;");
+                column.getChildren().add(droppedCard);
+
+                success = true;
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
     }
 
     private void updateBoardName(Long boardId, String newName) {

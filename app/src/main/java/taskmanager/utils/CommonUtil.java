@@ -37,7 +37,7 @@ public class CommonUtil {
     }
   }
 
-  public void openMainApp(BorderPane borderPane) {
+  public static void openMainApp(BorderPane borderPane) {
     try {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Workspace.fxml"));
         Parent root = loader.load();
@@ -50,7 +50,7 @@ public class CommonUtil {
     }
   }
 
-  public void showErrorAlert(String title, String message) {
+  public static void showErrorAlert(String title, String message) {
     Alert alert = new Alert(AlertType.ERROR);
     alert.setTitle(title);
     alert.setHeaderText(null);
@@ -58,9 +58,9 @@ public class CommonUtil {
     alert.showAndWait();
   }
 
-  public void showSuccessMessage(Alert.AlertType type, String message) {
+  public static void showSuccessMessage(Alert.AlertType type, String message) {
     Alert successAlert = new Alert(type);
-    successAlert.setContentText("Register Successfully");
+    successAlert.setContentText(message);
     successAlert.show();
   }
 }

@@ -265,6 +265,7 @@ public class WorkspaceController {
 
                 colIndex++;
             }
+
         }
     }
 
@@ -284,20 +285,17 @@ public class WorkspaceController {
         label.setFont(new Font("System Italic", 12.0));
         label.setStyle("-fx-text-fill: white;");
         VBox.setMargin(label, new Insets(10.0));
-        getInfoUser();
 
         vBox.getChildren().add(label);
 
         vBox.setOnMouseClicked(event -> {
             SessionFactory factory = HibernateUtil.getFactory();
             Session session = factory.openSession();
-            // Transaction transaction = session.beginTransaction();
 
             Board board = session.get(Board.class, id);
             board.setLastOpened(LocalDateTime.now());
 
             session.update(board);
-            // transaction.commit();
             session.close();
 
             try {
