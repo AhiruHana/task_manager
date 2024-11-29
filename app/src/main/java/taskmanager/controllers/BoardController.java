@@ -84,7 +84,7 @@ public class BoardController {
                     String color2 = colorArray[1].trim();
 
                     String gradientText = String.format(
-                            "-fx-background-color: linear-gradient(to right, %s, %s); -fx-background-radius: 5.0;",
+                            "-fx-background: linear-gradient(to right, %s, %s)",
                             color1, color2);
 
                     scrollPane.setStyle(gradientText);
@@ -97,8 +97,10 @@ public class BoardController {
                     boardNameLabel.setManaged(false);
                     boardNameTextfield.setVisible(true);
 
+                    boardNameTextfield.setText(board.getName());
+
                     boardNameTextfield.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-                        if (isNowFocused) {
+                        if (isNowFocused) { 
                             boardNameTextfield.selectAll();
                         }
                     });
@@ -113,10 +115,7 @@ public class BoardController {
                             boardNameTextfield.setManaged(false);
                             boardNameLabel.setVisible(true);
 
-                            board.setName(newName);
-                            session.beginTransaction();
-                            session.update(board);
-                            session.getTransaction().commit();
+                            updateBoardName(boardId,newName);
                         }
                     });
                 });
@@ -303,7 +302,7 @@ public class BoardController {
 
             session.beginTransaction();
             Query getBoardquery = session.createQuery(
-                    "SELECT b FROM Board w WHERE b.id = :boardId");
+                    "SELECT b FROM Board b WHERE b.id = :boardId");
 
             getBoardquery.setParameter("boardId", boardId);
             Board board = (Board) getBoardquery.getSingleResult();
@@ -317,5 +316,35 @@ public class BoardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateBoardName(Long boardId, String newName) {
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
+        Transaction transaction = null;
+    
+        try {
+            transaction = session.beginTransaction();
+    
+            Board board = session.get(Board.class, boardId);
+            if (board != null) {
+                board.setName(newName);
+                session.update(board);
+            }
+    
+            transaction.commit();
+            System.out.println("Board name updated successfully!");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+
+    public void createTask(Col col, String name){
+
     }
 }
