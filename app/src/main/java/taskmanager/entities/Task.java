@@ -99,7 +99,7 @@ public class Task {
 
     try {
         session.beginTransaction();
-        session.save(task);
+        session.saveOrUpdate(task);
         session.getTransaction().commit();
     } catch (ConstraintViolationException e) {
         errorMessage = "Validation error: " + e.getConstraintName();

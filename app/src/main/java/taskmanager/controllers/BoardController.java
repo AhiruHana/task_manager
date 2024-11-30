@@ -189,13 +189,15 @@ public class BoardController {
                 newCol.setBoard(board);
                 session.save(newCol);
 
-                setCol(newCol);
+                // setCol(newCol);
                 session.getTransaction().commit();
 
                 VBox colVBox = new VBox();
                 colVBox.setStyle("-fx-border-color: none; -fx-background-color: #F1F2F4;");
                 colVBox.setSpacing(10.0);
                 colVBox.setMinWidth(270);
+
+                colVBox.setUserData(newCol.getId());
 
                 setDragAndDropEvents(colVBox);
 
@@ -256,6 +258,7 @@ public class BoardController {
                 addListButton.setTextFill(Color.WHITE);
                 addListButton.setFont(Font.font("System", FontWeight.BOLD, 12.0));
 
+                addListButton.setUserData(newCol.getId());
                 Button closeButton = new Button();
                 closeButton.setStyle("-fx-background-color: #F1F2F4;");
                 Label closeLabel = new Label("\u2715"); // Unicode dau "✕"
@@ -305,6 +308,8 @@ public class BoardController {
 
                             Task newTask = new Task();
                             newTask.setName(title);
+                            Long attachColId = (Long) addListButton.getUserData();
+                            col = Col.findById(attachColId);
                             newTask.setCol(col);
                             // newTask.setDescription("");
                             session.save(newTask);
@@ -334,7 +339,8 @@ public class BoardController {
                                 draggedVBox = null;
 
                                 Task task = Task.findById(draggedTaskId);
-                                Col col = Col.findById(targetColId);
+                                Long colId = (Long) cardVBox.getParent().getUserData();
+                                Col col = Col.findById(colId);
                                 task.setCol(col);
                                 Task.save(task);
 
