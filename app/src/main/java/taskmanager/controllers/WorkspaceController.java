@@ -267,6 +267,7 @@ public class WorkspaceController {
 
                 colIndex++;
             }
+
         }
     }
 
@@ -286,7 +287,6 @@ public class WorkspaceController {
         label.setFont(new Font("System Italic", 12.0));
         label.setStyle("-fx-text-fill: white;");
         VBox.setMargin(label, new Insets(10.0));
-        getInfoUser();
 
         vBox.getChildren().add(label);
 

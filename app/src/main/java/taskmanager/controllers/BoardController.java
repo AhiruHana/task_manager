@@ -18,9 +18,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,6 +33,7 @@ import taskmanager.entities.Board;
 import taskmanager.entities.Col;
 import taskmanager.entities.Task;
 import taskmanager.entities.Workspace;
+import taskmanager.utils.CommonUtil;
 import taskmanager.utils.HibernateUtil;
 
 public class BoardController {
@@ -60,10 +65,14 @@ public class BoardController {
     @FXML
     private TextField boardNameTextfield;
 
+    private VBox draggedVBox = null;
+    private Long draggedTaskId;
+    private Long targetColId;
+
     private Long boardId;
 
-    public void setId(Long boardId) {
-        this.boardId = boardId;
+    public void setId(Long id) {
+        this.boardId = id;
     }
 
     private Col col;
@@ -137,6 +146,12 @@ public class BoardController {
         }
     }
 
+
+    @FXML
+    void goToWorkspace(ActionEvent event) {
+        CommonUtil.openMainApp(borderPane);
+    }
+
     @FXML
     private void addCol(ActionEvent event) {
         addColButton.setVisible(false);
@@ -174,13 +189,17 @@ public class BoardController {
                 newCol.setBoard(board);
                 session.save(newCol);
 
-                setCol(newCol);
+                // setCol(newCol);
                 session.getTransaction().commit();
 
                 VBox colVBox = new VBox();
                 colVBox.setStyle("-fx-border-color: none; -fx-background-color: #F1F2F4;");
                 colVBox.setSpacing(10.0);
                 colVBox.setMinWidth(270);
+
+                colVBox.setUserData(newCol.getId());
+
+                setDragAndDropEvents(colVBox);
 
                 VBox colNameVBox = new VBox();
 
@@ -239,6 +258,7 @@ public class BoardController {
                 addListButton.setTextFill(Color.WHITE);
                 addListButton.setFont(Font.font("System", FontWeight.BOLD, 12.0));
 
+                addListButton.setUserData(newCol.getId());
                 Button closeButton = new Button();
                 closeButton.setStyle("-fx-background-color: #F1F2F4;");
                 Label closeLabel = new Label("\u2715"); // Unicode dau "✕"
@@ -253,6 +273,7 @@ public class BoardController {
 
                 // gan cac thanh phan vao vbox
                 VBox inputVBox = new VBox(titleTextField, buttonBox);
+
                 inputVBox.setSpacing(10.0);
                 VBox.setMargin(inputVBox, new Insets(0, 10.0, 0, 10.0));
 
@@ -281,13 +302,14 @@ public class BoardController {
                     String title = titleTextField.getText();
 
                     if (title != null && !title.isEmpty()) {
-
                         try {
 
                             session.beginTransaction();
 
                             Task newTask = new Task();
                             newTask.setName(title);
+                            Long attachColId = (Long) addListButton.getUserData();
+                            col = Col.findById(attachColId);
                             newTask.setCol(col);
                             // newTask.setDescription("");
                             session.save(newTask);
@@ -301,6 +323,31 @@ public class BoardController {
                             cardLabel.setPadding(new Insets(7.0, 8.0, 7.0, 8.0));
                             VBox cardVBox = new VBox(cardLabel);
                             VBox.setMargin(cardVBox, new Insets(5.0, 8.0, 0, 8.0));
+                            cardVBox.setUserData(newTask.getId());
+
+                            cardVBox.setOnDragDetected(dragEvent -> {
+                                draggedVBox = cardVBox;
+                                draggedTaskId = (Long) cardVBox.getUserData();
+                                Dragboard dragboard = cardVBox.startDragAndDrop(TransferMode.MOVE);
+                                ClipboardContent content = new ClipboardContent();
+                                content.putString(cardLabel.getText()); // Put the data of the card (e.g., ID or title)
+                                dragboard.setContent(content);
+                                dragEvent.consume();
+                            });
+
+                            cardVBox.setOnDragDone(dragEvent -> {
+                                draggedVBox = null;
+
+                                Task task = Task.findById(draggedTaskId);
+                                Long colId = (Long) cardVBox.getParent().getUserData();
+                                Col col = Col.findById(colId);
+                                task.setCol(col);
+                                Task.save(task);
+
+                                draggedTaskId = null;
+                                targetColId = null;
+                                dragEvent.consume();
+                            });
 
                             mainVBox.getChildren().addAll(cardVBox);
                             if (!mainVBox.getChildren().isEmpty()) {
@@ -339,6 +386,63 @@ public class BoardController {
         addColTextField.setManaged(false);
         addColButton.setVisible(true);
 
+    }
+
+    public void createCol(Long boardId, String name) {
+        try {
+            SessionFactory factory = HibernateUtil.getFactory();
+            Session session = factory.openSession();
+
+            session.beginTransaction();
+            Query getBoardquery = session.createQuery(
+                    "SELECT b FROM Board b WHERE b.id = :boardId");
+
+            getBoardquery.setParameter("boardId", boardId);
+            Board board = (Board) getBoardquery.getSingleResult();
+
+            Col newCol = new Col();
+            newCol.setName(name);
+            newCol.setBoard(board);
+            session.save(newCol);
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setDragAndDropEvents(VBox column) {
+        column.setStyle("-fx-background-color: white; -fx-padding: 10;");
+        column.setOnDragOver((DragEvent dragEvent) -> {
+            if (dragEvent.getGestureSource() != column && dragEvent.getDragboard().hasString()) {
+                dragEvent.acceptTransferModes(TransferMode.MOVE);
+            }
+            dragEvent.consume();
+        });
+
+        column.setOnDragDropped(event -> {
+            if (draggedVBox != null) {
+                // Remove the VBox from its current parent and add to this column
+                Pane currentParent = (Pane) draggedVBox.getParent();
+                if (currentParent != null) {
+                    currentParent.getChildren().remove(draggedVBox);
+
+                    // currentParent.requestLayout();
+                    currentParent.applyCss();
+                    currentParent.layout();
+                }
+
+                int buttonIndex = column.getChildren().size() - 2;
+
+                column.getChildren().add(buttonIndex, draggedVBox);
+
+                column.applyCss();
+                column.layout();
+            }
+
+            event.setDropCompleted(true); // Indicate the drop is completed
+            event.consume();
+        });
     }
 
     private void updateBoardName(Long boardId, String newName) {

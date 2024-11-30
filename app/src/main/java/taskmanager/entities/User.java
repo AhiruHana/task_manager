@@ -7,8 +7,10 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.exception.ConstraintViolationException;
 
 import taskmanager.utils.HibernateUtil;
+import taskmanager.utils.PasswordUtil;
 
 @Entity
 @Table(name = "users")
@@ -80,9 +82,19 @@ public class User {
     this.username = username;
   }
 
+  public User() {}
+
+  public User(String username, String firstName, String lastName, String Email, String password) {
+    setUsername(username);
+    setFirstName(firstName);
+    setLastName(lastName);
+    setEmail(Email);
+    setPasswordDigest(PasswordUtil.hashPassword(password));
+  }
+
   public static User findByEmail(String email) {
     return findByField("email", email);
-}
+  }
 
   public static User findById(Long id) {
       return findByField("id", id);
@@ -109,5 +121,31 @@ public class User {
       e.printStackTrace();
       return null;
     }
+  }
+
+  public static String saveUser(User user) {
+    SessionFactory sessionFactory = HibernateUtil.getFactory();
+    Session session = sessionFactory.openSession();
+    String errorMessage = null;
+
+    try {
+        session.beginTransaction();
+        session.save(user);
+        session.getTransaction().commit();
+    } catch (ConstraintViolationException e) {
+        errorMessage = "Validation error: " + e.getConstraintName();
+        if (session.getTransaction() != null) {
+            session.getTransaction().rollback();
+        }
+    } catch (Exception e) {
+        errorMessage = "An unexpected error occurred: " + e.getMessage();
+        if (session.getTransaction() != null) {
+            session.getTransaction().rollback();
+        }
+    } finally {
+        session.close();
+    }
+
+    return errorMessage;
   }
 }
