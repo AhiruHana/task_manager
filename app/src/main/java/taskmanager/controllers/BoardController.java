@@ -282,11 +282,6 @@ public class BoardController {
 
                     if (title != null && !title.isEmpty()) {
 
-                        // SessionFactory factory = HibernateUtil.getFactory();
-                        // Session session = factory.openSession();
-
-                        // session.beginTransaction();
-
                         try {
 
                             session.beginTransaction();
@@ -372,4 +367,31 @@ public class BoardController {
         }
     }
 
+    public void renderCol(Long boardId) {
+        SessionFactory factory = HibernateUtil.getFactory();
+        Session session = factory.openSession();
+        Transaction transaction = null;
+
+        try {
+            transaction = session.beginTransaction();
+
+            Query query = session.createQuery(
+                    "SELECT c FROM Col c WHERE c.board_id = :username");
+            query.setParameter("username", username);
+            List<Board> boards = query.list();
+            if (col != null) {
+
+            }
+
+            transaction.commit();
+            System.out.println("Board name updated successfully!");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 }

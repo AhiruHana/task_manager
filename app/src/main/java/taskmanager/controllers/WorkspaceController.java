@@ -155,7 +155,8 @@ public class WorkspaceController {
                         color1, color2);
 
                 VBox vBox = new VBox();
-                boardVbox(vBox, gradientText, name, boards, id);
+                boardVbox(vBox, gradientText, name, boards, id,session);
+
                 GridPane.setConstraints(vBox, colIndex, rowIndex);
                 boardList.getChildren().add(vBox);
 
@@ -177,6 +178,7 @@ public class WorkspaceController {
         label.setFont(new Font("System Italic", 12.0));
         VBox.setMargin(label, new Insets(10.0));
 
+        //create board
         vBox.setOnMouseClicked(event -> {
             try {
                 session.beginTransaction();
@@ -259,7 +261,7 @@ public class WorkspaceController {
                         color1, color2);
 
                 VBox vBox = new VBox();
-                boardVbox(vBox, gradientText, name, boards, id);
+                boardVbox(vBox, gradientText, name, boards, id, session);
                 GridPane.setConstraints(vBox, colIndex, 0);
                 recentlyOpened.getChildren().add(vBox);
 
@@ -274,7 +276,7 @@ public class WorkspaceController {
         info_email.setText("Email : " + currentUser.getEmail());
     }
 
-    public void boardVbox(VBox vBox, String gradientText, String name, List<Board> boards, Long id) {
+    public void boardVbox(VBox vBox, String gradientText, String name, List<Board> boards, Long id, Session session) {
 
         vBox.setPrefHeight(70.0);
         vBox.setPrefWidth(190.0);
@@ -289,16 +291,14 @@ public class WorkspaceController {
         vBox.getChildren().add(label);
 
         vBox.setOnMouseClicked(event -> {
-            SessionFactory factory = HibernateUtil.getFactory();
-            Session session = factory.openSession();
-            // Transaction transaction = session.beginTransaction();
+            session.beginTransaction();
 
             Board board = session.get(Board.class, id);
             board.setLastOpened(LocalDateTime.now());
+            Long boardId = board.getId();
 
             session.update(board);
-            // transaction.commit();
-            session.close();
+            session.getTransaction().commit();
 
             try {
                 double width = borderPane.getScene().getWidth();
@@ -306,6 +306,10 @@ public class WorkspaceController {
 
                 FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/Board.fxml"));
                 Parent root = loader.load();
+
+                BoardController boardController = loader.getController();
+                boardController.displayBoardName(boardId);
+                boardController.setId(boardId);
 
                 Scene scene = new Scene(root, width, height);
                 Stage stage = (Stage) borderPane.getScene().getWindow();
