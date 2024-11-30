@@ -480,10 +480,11 @@ public class BoardController {
             transaction = session.beginTransaction();
 
             Query query = session.createQuery(
-                    "SELECT c FROM Col c WHERE c.board_id = :boardId");
-            query.setParameter("username", boardId);
+                    "SELECT c FROM Col c WHERE c.board.id = :boardId");
+            query.setParameter("boardId", boardId);
+
             List<Col> cols = query.list();
-            
+System.out.println(cols);
             if (cols != null) {
                 for (Col c : cols) {
                     VBox colVBox = new VBox();

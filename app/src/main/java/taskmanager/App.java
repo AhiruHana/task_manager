@@ -31,17 +31,17 @@ public class App extends Application {
                 CommonUtil.showSuccessMessage(AlertType.INFORMATION, "Welcome back " + currentUser.getUsername());
 
                 scene = new Scene(loadFXML("Workspace"), width, height);  // Load the main workspace screen
-                // primaryStage.setMaximized(true);
+                primaryStage.setMaximized(true);
                 primaryStage.setScene(scene);
             } catch (Exception e) {
                 scene = new Scene(loadFXML("Login"), width, height);
-                // primaryStage.setMaximized(true);
+                primaryStage.setMaximized(true);
                 primaryStage.setScene(scene);
             }
         } else {
             // No token means the user is not logged in, show the login screen
             scene = new Scene(loadFXML("Login"), width, height);
-            // primaryStage.setMaximized(true);
+            primaryStage.setMaximized(true);
             primaryStage.setScene(scene);
         }
         primaryStage.show();

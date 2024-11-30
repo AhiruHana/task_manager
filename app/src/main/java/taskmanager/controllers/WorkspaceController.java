@@ -310,6 +310,8 @@ public class WorkspaceController {
                 BoardController boardController = loader.getController();
                 boardController.displayBoardName(boardId);
                 boardController.setId(boardId);
+                boardController.renderCol(boardId);
+
 
                 Scene scene = new Scene(root, width, height);
                 Stage stage = (Stage) borderPane.getScene().getWindow();
