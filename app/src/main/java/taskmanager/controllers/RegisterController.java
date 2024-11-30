@@ -2,6 +2,8 @@ package taskmanager.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -113,11 +115,30 @@ public class RegisterController {
                         .setParameter("email", email)
                         .getSingleResult();
 
+                Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+                if (firstName == "") {
+                    throw new RuntimeException("First Name can't be blank");
+                } else if (lastName == "") {
+                    throw new RuntimeException("Last Name can't be blank");
+                } else if (username == "") {
+                    throw new RuntimeException("Username can't be blank");
+                } else if (email == "") {
+                    throw new RuntimeException("Email can't be blank");
+                }
+
+                Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+
+                if (!matcher.matches()) {
+                    throw new RuntimeException("Email is in the wrong format");
+                }
+
                 if (usernameCount > 0) {
                     throw new RuntimeException("Username is existed, please try again!");
                 } else if (emailCount > 0) {
                     throw new RuntimeException("Email is existed, please try again!");
                 }
+
 
                 // Tạo user mới
                 RegisterController registerController = new RegisterController();
