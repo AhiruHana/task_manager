@@ -1,5 +1,13 @@
 package taskmanager.entities;
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+
+import taskmanager.utils.HibernateUtil;
 
 @Entity
 @Table(name = "cols")
@@ -37,5 +45,32 @@ public class Col {
 
   public void setBoard(Board board) {
     this.board = board;
+  }
+
+  public static Col findById(Long id) {
+      return findByField("id", id);
+  }
+
+  private static <T> Col findByField(String field, T value) {
+    try {
+      SessionFactory sessionFactory = HibernateUtil.getFactory();
+      Session session = sessionFactory.openSession();
+      session.beginTransaction();
+
+      CriteriaBuilder builder = session.getCriteriaBuilder();
+      CriteriaQuery<Col> criteria = builder.createQuery(Col.class);
+      Root<Col> root = criteria.from(Col.class);
+      criteria.select(root).where(builder.equal(root.get(field), value));
+
+      Col result = session.createQuery(criteria).uniqueResult();
+
+      session.getTransaction().commit();
+      session.close();
+
+      return result;
+    } catch(Exception e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

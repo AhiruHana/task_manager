@@ -18,11 +18,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -62,6 +64,10 @@ public class BoardController {
 
     @FXML
     private TextField boardNameTextfield;
+
+    private VBox draggedVBox = null;
+    private Long draggedTaskId;
+    private Long targetColId;
 
     private Long boardId;
 
@@ -264,6 +270,7 @@ public class BoardController {
 
                 // gan cac thanh phan vao vbox
                 VBox inputVBox = new VBox(titleTextField, buttonBox);
+
                 inputVBox.setSpacing(10.0);
                 VBox.setMargin(inputVBox, new Insets(0, 10.0, 0, 10.0));
 
@@ -311,6 +318,30 @@ public class BoardController {
                             cardLabel.setPadding(new Insets(7.0, 8.0, 7.0, 8.0));
                             VBox cardVBox = new VBox(cardLabel);
                             VBox.setMargin(cardVBox, new Insets(5.0, 8.0, 0, 8.0));
+                            cardVBox.setUserData(newTask.getId());
+
+                            cardVBox.setOnDragDetected(dragEvent -> {
+                                draggedVBox = cardVBox;
+                                draggedTaskId = (Long) cardVBox.getUserData();
+                                Dragboard dragboard = cardVBox.startDragAndDrop(TransferMode.MOVE);
+                                ClipboardContent content = new ClipboardContent();
+                                content.putString(cardLabel.getText()); // Put the data of the card (e.g., ID or title)
+                                dragboard.setContent(content);
+                                dragEvent.consume();
+                            });
+
+                            cardVBox.setOnDragDone(dragEvent -> {
+                                draggedVBox = null;
+
+                                Task task = Task.findById(draggedTaskId);
+                                Col col = Col.findById(targetColId);
+                                task.setCol(col);
+                                Task.save(task);
+
+                                draggedTaskId = null;
+                                targetColId = null;
+                                dragEvent.consume();
+                            });
 
                             mainVBox.getChildren().addAll(cardVBox);
                             if (!mainVBox.getChildren().isEmpty()) {
@@ -375,6 +406,7 @@ public class BoardController {
     }
 
     private void setDragAndDropEvents(VBox column) {
+        column.setStyle("-fx-background-color: white; -fx-padding: 10;");
         column.setOnDragOver((DragEvent dragEvent) -> {
             if (dragEvent.getGestureSource() != column && dragEvent.getDragboard().hasString()) {
                 dragEvent.acceptTransferModes(TransferMode.MOVE);
@@ -383,17 +415,26 @@ public class BoardController {
         });
 
         column.setOnDragDropped(event -> {
-            Dragboard dragboard = event.getDragboard();
-            boolean success = false;
+            if (draggedVBox != null) {
+                // Remove the VBox from its current parent and add to this column
+                Pane currentParent = (Pane) draggedVBox.getParent();
+                if (currentParent != null) {
+                    currentParent.getChildren().remove(draggedVBox);
 
-            if (dragboard.hasString()) {
-                Label droppedCard = new Label(dragboard.getString());
-                droppedCard.setStyle("-fx-background-color: lightgreen; -fx-padding: 10;");
-                column.getChildren().add(droppedCard);
+                    // currentParent.requestLayout();
+                    currentParent.applyCss();
+                    currentParent.layout();
+                }
 
-                success = true;
+                int buttonIndex = column.getChildren().size() - 2;
+
+                column.getChildren().add(buttonIndex, draggedVBox);
+
+                column.applyCss();
+                column.layout();
             }
-            event.setDropCompleted(success);
+
+            event.setDropCompleted(true); // Indicate the drop is completed
             event.consume();
         });
     }

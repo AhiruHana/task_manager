@@ -94,7 +94,7 @@ public class User {
 
   public static User findByEmail(String email) {
     return findByField("email", email);
-}
+  }
 
   public static User findById(Long id) {
       return findByField("id", id);
